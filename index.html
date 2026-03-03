@@ -114,35 +114,35 @@
         /* ── Festival Grid ── */
         .festival-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 8px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
         .festival-card {
             background: var(--input-bg);
             border: 1.5px solid var(--border);
-            border-radius: 12px;
-            padding: 14px 6px;
+            border-radius: 10px;
+            padding: 8px 4px;
             text-align: center;
             cursor: pointer;
             transition: transform .18s, background .18s, border-color .18s;
         }
 
         .festival-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             background: rgba(255, 255, 255, 0.08);
             border-color: rgba(255, 255, 255, 0.2);
         }
 
         .festival-card .emoji {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
         }
 
         .festival-card .name {
-            font-size: 0.72rem;
+            font-size: 0.65rem;
             font-weight: 600;
             color: var(--muted);
             transition: color .18s;
@@ -283,6 +283,21 @@
 
         .fc-thankyou.selected .name {
             color: #1ABC9C;
+        }
+
+        .fc-custom.selected {
+            border-color: #9E9E9E;
+            background: rgba(158, 158, 158, 0.1);
+        }
+
+        .fc-custom.selected .name {
+            color: #E8ECF4;
+        }
+
+        #customOccasionDiv {
+            display: none;
+            margin-top: 10px;
+            animation: slideUp .3s ease;
         }
 
         /* ── Inputs ── */
@@ -505,16 +520,20 @@
                 padding: 24px 18px;
             }
 
+            .festival-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
             .form-row {
                 grid-template-columns: 1fr;
             }
 
             .festival-card .emoji {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
 
             .festival-card .name {
-                font-size: 0.68rem;
+                font-size: 0.62rem;
             }
         }
     </style>
@@ -563,6 +582,13 @@
                         class="emoji">🌸</span><span class="name">Onam</span></div>
                 <div class="festival-card fc-lohri" data-f="lohri" onclick="selectFest(this)"><span
                         class="emoji">🔥</span><span class="name">Lohri</span></div>
+                <div class="festival-card fc-custom" data-f="custom" onclick="selectFest(this)"><span
+                        class="emoji">✨</span><span class="name">Custom</span></div>
+            </div>
+            <div id="customOccasionDiv" class="form-group" style="margin-bottom:0">
+                <label for="customOccasionInput">Name your Occasion</label>
+                <input type="text" id="customOccasionInput" placeholder="e.g. Housewarming, Farewell" maxlength="30" />
+                <div class="field-err" id="errCustom">Enter your custom occasion</div>
             </div>
             <div class="field-err" id="errFest">Please select an occasion</div>
 
@@ -640,7 +666,8 @@
             newyear: { emoji: '🎆', label: 'New Year', greeting: 'Happy New Year!' },
             navratri: { emoji: '💃', label: 'Navratri', greeting: 'Happy Navratri!' },
             onam: { emoji: '🌸', label: 'Onam', greeting: 'Happy Onam!' },
-            lohri: { emoji: '🔥', label: 'Lohri', greeting: 'Happy Lohri!' }
+            lohri: { emoji: '🔥', label: 'Lohri', greeting: 'Happy Lohri!' },
+            custom: { emoji: '✨', label: 'Custom', greeting: 'Special Wishes!' }
         };
 
         /* ── Festival select ── */
@@ -649,6 +676,12 @@
             card.classList.add('selected');
             selectedFestival = card.dataset.f;
             hide('errFest');
+
+            if (selectedFestival === 'custom') {
+                show('customOccasionDiv');
+            } else {
+                hide('customOccasionDiv');
+            }
         }
 
         /* ── Char counter ── */
@@ -672,6 +705,7 @@
         function validate() {
             let ok = true;
             if (!selectedFestival) { show('errFest'); ok = false; } else hide('errFest');
+            if (selectedFestival === 'custom' && !val('customOccasionInput')) { show('errCustom'); ok = false; } else hide('errCustom');
             if (!val('senderName')) { show('errSender'); ok = false; } else hide('errSender');
             if (!val('receiverName')) { show('errReceiver'); ok = false; } else hide('errReceiver');
             if (!val('message')) { show('errMsg'); ok = false; } else hide('errMsg');
@@ -688,6 +722,10 @@
                 festival: selectedFestival,
                 version: '1.0'
             };
+
+            if (selectedFestival === 'custom') {
+                data.customName = val('customOccasionInput');
+            }
             const encoded = encodeGreeting(data);
             const base = window.location.href.replace(/index\.html.*$/, '').replace(/\/$/, '');
             const link = `${base}/view.html?d=${encoded}`;
@@ -695,8 +733,13 @@
             document.getElementById('linkBox').textContent = link;
             document.getElementById('linkBox').dataset.link = link;
 
+            let greetStr = festMeta[selectedFestival].greeting;
+            if (selectedFestival === 'custom') {
+                greetStr = `Happy ${data.customName}!`;
+            }
+
             const meta = festMeta[selectedFestival];
-            const waMsg = `${meta.emoji} ${meta.greeting}\nI've sent you a special greeting — open it here:\n${link}`;
+            const waMsg = `${meta.emoji} ${greetStr}\nI've sent you a special greeting — open it here:\n${link}`;
             document.getElementById('btnWA').href = `https://wa.me/?text=${encodeURIComponent(waMsg)}`;
 
             const out = document.getElementById('outputSection');

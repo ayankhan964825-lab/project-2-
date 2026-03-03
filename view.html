@@ -89,6 +89,10 @@
             background: linear-gradient(135deg, #0D5C63 0%, #1ABC9C 100%);
         }
 
+        body.custom {
+            background: linear-gradient(135deg, #2C3E50 0%, #000000 100%);
+        }
+
         /* ── Canvas ── */
         #canvas {
             position: fixed;
@@ -204,6 +208,12 @@
             border-top: 5px solid #1ABC9C;
         }
 
+        .popup.custom {
+            border-top: 5px solid #BDC3C7;
+            background: #111;
+            color: #eee;
+        }
+
         /* Close */
         .btn-close {
             position: absolute;
@@ -228,7 +238,8 @@
             color: #444;
         }
 
-        .popup.newyear .btn-close {
+        .popup.newyear .btn-close,
+        .popup.custom .btn-close {
             background: rgba(255, 255, 255, 0.1);
             color: #aaa;
         }
@@ -371,6 +382,14 @@
             color: #117A65;
         }
 
+        .custom .fest-greeting {
+            color: #F1C40F;
+        }
+
+        .custom .receiver-name {
+            color: #BDC3C7;
+        }
+
         .popup-divider {
             height: 1px;
             background: rgba(0, 0, 0, 0.08);
@@ -390,7 +409,8 @@
             word-break: break-word;
         }
 
-        .popup.newyear .msg-text {
+        .popup.newyear .msg-text,
+        .popup.custom .msg-text {
             color: rgba(240, 240, 240, 0.88);
         }
 
@@ -401,7 +421,8 @@
             text-align: right;
         }
 
-        .popup.newyear .sender-line {
+        .popup.newyear .sender-line,
+        .popup.custom .sender-line {
             color: rgba(255, 255, 255, 0.5);
         }
 
@@ -538,7 +559,8 @@
             anniversary: { greeting: '💑 Happy Anniversary!', particle: 'confetti', colors: ['#E74C3C', '#FF6B6B', '#FF1493', '#FFD700', '#FFF'] },
             graduation: { greeting: '🎓 Congratulations, Graduate!', particle: 'confetti', colors: ['#3498DB', '#1B4F72', '#FFD700', '#FFF', '#5DADE2'] },
             babyshower: { greeting: '👶 Welcome Little One!', particle: 'petals', colors: ['#FF9FF3', '#FDCBF1', '#A6C0FE', '#FFC3A0', '#FFF'] },
-            thankyou: { greeting: '🙏 Thank You So Much!', particle: 'stars', colors: ['#1ABC9C', '#48C9B0', '#76D7C4', '#FFD700', '#FFF'] }
+            thankyou: { greeting: '🙏 Thank You So Much!', particle: 'stars', colors: ['#1ABC9C', '#48C9B0', '#76D7C4', '#FFD700', '#FFF'] },
+            custom: { greeting: '✨ Special Wishes!', particle: 'stars', colors: ['#F1C40F', '#BDC3C7', '#FFF', '#95A5A6'] }
         };
 
         /* ══════════════════════════════
@@ -736,10 +758,14 @@
                 document.body.classList.add(data.festival);
 
                 // Set page title
-                document.title = `${fest.greeting} — FestiveLink`;
+                let greetStr = fest.greeting;
+                if (data.festival === 'custom' && data.customName) {
+                    greetStr = `✨ Happy ${data.customName}!`;
+                }
+                document.title = `${greetStr} — FestiveLink`;
 
                 // Fill popup
-                document.getElementById('festGreet').textContent = fest.greeting;
+                document.getElementById('festGreet').textContent = greetStr;
                 document.getElementById('recvName').textContent = `Dear ${data.receiver},`;
                 document.getElementById('msgText').textContent = data.message;
                 document.getElementById('senderLine').textContent = `With love, ${data.sender} ❤️`;
