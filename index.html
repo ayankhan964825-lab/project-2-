@@ -610,6 +610,68 @@
                 };
                 list.insertBefore(div, list.firstChild); // Put custom at top if typing
             }
+
+            // Always offer a Custom Option if there's a custom query
+            if (query.trim().length > 0 && !hasExactMatch) {
+                const customLabel = query.trim().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.innerHTML = `<span class="emoji">✨</span><span class="name">${customLabel}</span><span class="custom-create-hint">Create</span>`;
+                div.onclick = () => {
+                    customOccasionName = customLabel;
+                    selectFest('custom', customLabel, '✨');
+                };
+                list.insertBefore(div, list.firstChild); // Put custom at top if typing
+            }
+        }
+
+        function selectFest(key, label, emoji) {
+            selectedFestival = key;
+            if (key !== 'custom') customOccasionName = ''; // Reset if standard chosen
+
+            hide('errFest');
+            hide('searchContainer');
+
+            document.getElementById('selEmoji').textContent = emoji;
+            document.getElementById('selName').textContent = label;
+            document.getElementById('selectedOccasionDisplay').style.display = 'flex';
+        }
+
+        function changeOccasion() {
+            selectedFestival = null;
+            customOccasionName = '';
+            document.getElementById('selectedOccasionDisplay').style.display = 'none';
+            document.getElementById('searchInput').value = '';
+            show('searchContainer');
+            renderResults();
+            document.getElementById('searchInput').focus();
+        }
+
+        // Initial render on load
+        window.onload = () => { renderResults(); };
+
+        /* ── Char counter ── */
+        const msgEl = document.getElementById('message');
+        const charEl = document.getElementById('charCount');
+        msgEl.addEventListener('input', () => {
+            const n = msgEl.value.length;
+            charEl.textContent = `${n} / 500`;
+            charEl.className = 'char-count' + (n > 490 ? ' over' : n > 450 ? ' warn' : '');
+        });
+
+        /* ── Helpers ── */
+        function show(id) { document.getElementById(id).style.display = 'block'; }    // Always offer a Custom Option if there's a custom query
+        if (query.trim().length > 0 && !hasExactMatch) {
+            const customLabel = query.trim().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            const div = document.createElement('div');
+            div.className = 'result-item';
+            div.innerHTML = `<span class="emoji">✨</span><span class="name">${customLabel}</span><span class="custom-create-hint">Create</span>`;
+            div.onclick = () => {
+                customOccasionName = customLabel;
+                selectFest('custom', customLabel, '✨');
+            };
+            list.insertBefore(div, list.firstChild); // Put custom at top if typing
+        }
         }
 
         function selectFest(key, label, emoji) {
