@@ -111,193 +111,131 @@
             margin: 24px 0;
         }
 
-        /* ── Festival Grid ── */
-        .festival-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
+        /* ── Search Occasion UI ── */
+        .search-wrapper {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 9px;
+            padding: 13px 15px 13px 40px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9375rem;
+            color: var(--text);
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: var(--muted);
+            pointer-events: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--orange);
+            background: rgba(232, 93, 4, 0.05);
+            box-shadow: 0 0 0 3px rgba(232, 93, 4, 0.14);
+        }
+
+        .search-input::placeholder {
+            color: rgba(136, 146, 164, 0.55);
+        }
+
+        .results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 220px;
+            overflow-y: auto;
             margin-bottom: 12px;
         }
 
-        .festival-card {
+        .result-item {
             background: var(--input-bg);
             border: 1.5px solid var(--border);
-            border-radius: 10px;
-            padding: 8px 4px;
-            text-align: center;
+            border-radius: 9px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             cursor: pointer;
-            transition: transform .18s, background .18s, border-color .18s;
+            transition: all .2s;
         }
 
-        .festival-card:hover {
-            transform: translateY(-2px);
+        .result-item:hover {
+            transform: translateY(-1px);
             background: rgba(255, 255, 255, 0.08);
             border-color: rgba(255, 255, 255, 0.2);
         }
 
-        .festival-card .emoji {
+        .result-item .emoji {
             font-size: 1.4rem;
-            display: block;
-            margin-bottom: 2px;
         }
 
-        .festival-card .name {
-            font-size: 0.65rem;
+        .result-item .name {
+            font-size: 0.9rem;
             font-weight: 600;
-            color: var(--muted);
-            transition: color .18s;
+            color: var(--text);
+            flex: 1;
         }
 
-        /* Selected states */
-        .fc-holi.selected {
-            border-color: #FF6B6B;
-            background: rgba(255, 107, 107, 0.1);
+        .result-item.selected {
+            border-color: var(--orange);
+            background: rgba(232, 93, 4, 0.08);
         }
 
-        .fc-holi.selected .name {
-            color: #FF6B6B;
+        .result-item.selected .name {
+            color: var(--orange);
         }
 
-        .fc-diwali.selected {
-            border-color: #FFD700;
-            background: rgba(255, 215, 0, 0.1);
+        .custom-create-hint {
+            font-size: 0.75rem;
+            color: var(--success);
+            background: rgba(39, 174, 96, 0.15);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
         }
 
-        .fc-diwali.selected .name {
-            color: #FFD700;
-        }
 
-        .fc-eid.selected {
-            border-color: #C0A060;
-            background: rgba(192, 160, 96, 0.1);
-        }
-
-        .fc-eid.selected .name {
-            color: #C0A060;
-        }
-
-        .fc-ramzan.selected {
-            border-color: #C9A84C;
-            background: rgba(201, 168, 76, 0.1);
-        }
-
-        .fc-ramzan.selected .name {
-            color: #C9A84C;
-        }
-
-        .fc-christmas.selected {
-            border-color: #E74C3C;
-            background: rgba(192, 57, 43, 0.1);
-        }
-
-        .fc-christmas.selected .name {
-            color: #E74C3C;
-        }
-
-        .fc-newyear.selected {
-            border-color: #F39C12;
-            background: rgba(243, 156, 18, 0.1);
-        }
-
-        .fc-newyear.selected .name {
-            color: #F39C12;
-        }
-
-        .fc-navratri.selected {
-            border-color: #9B59B6;
-            background: rgba(155, 89, 182, 0.1);
-        }
-
-        .fc-navratri.selected .name {
-            color: #9B59B6;
-        }
-
-        .fc-onam.selected {
-            border-color: #27AE60;
-            background: rgba(39, 174, 96, 0.1);
-        }
-
-        .fc-onam.selected .name {
-            color: #27AE60;
-        }
-
-        .fc-lohri.selected {
-            border-color: #E67E22;
-            background: rgba(230, 126, 34, 0.1);
-        }
-
-        .fc-lohri.selected .name {
-            color: #E67E22;
-        }
-
-        /* ── Life Events ── */
-        .fc-birthday.selected {
-            border-color: #E91E63;
-            background: rgba(233, 30, 99, 0.1);
-        }
-
-        .fc-birthday.selected .name {
-            color: #E91E63;
-        }
-
-        .fc-wedding.selected {
-            border-color: #D4AF37;
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        .fc-wedding.selected .name {
-            color: #D4AF37;
-        }
-
-        .fc-anniversary.selected {
-            border-color: #E74C3C;
-            background: rgba(231, 76, 60, 0.1);
-        }
-
-        .fc-anniversary.selected .name {
-            color: #E74C3C;
-        }
-
-        .fc-graduation.selected {
-            border-color: #3498DB;
-            background: rgba(52, 152, 219, 0.1);
-        }
-
-        .fc-graduation.selected .name {
-            color: #3498DB;
-        }
-
-        .fc-babyshower.selected {
-            border-color: #FF9FF3;
-            background: rgba(255, 159, 243, 0.1);
-        }
-
-        .fc-babyshower.selected .name {
-            color: #FF9FF3;
-        }
-
-        .fc-thankyou.selected {
-            border-color: #1ABC9C;
-            background: rgba(26, 188, 156, 0.1);
-        }
-
-        .fc-thankyou.selected .name {
-            color: #1ABC9C;
-        }
-
-        .fc-custom.selected {
-            border-color: #9E9E9E;
-            background: rgba(158, 158, 158, 0.1);
-        }
-
-        .fc-custom.selected .name {
-            color: #E8ECF4;
-        }
-
-        #customOccasionDiv {
+        /* Selected Occasion Display (Hidden until selected) */
+        #selectedOccasionDisplay {
             display: none;
-            margin-top: 10px;
-            animation: slideUp .3s ease;
+            background: rgba(232, 93, 4, 0.08);
+            border: 1.5px solid var(--orange);
+            border-radius: 9px;
+            padding: 12px 16px;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        #selectedOccasionDisplay .name {
+            font-weight: 600;
+            color: var(--orange);
+            flex: 1;
+        }
+
+        .btn-change {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-size: 0.8rem;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .btn-change:hover {
+            color: var(--text);
         }
 
         /* ── Inputs ── */
@@ -520,20 +458,8 @@
                 padding: 24px 18px;
             }
 
-            .festival-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
             .form-row {
                 grid-template-columns: 1fr;
-            }
-
-            .festival-card .emoji {
-                font-size: 1.3rem;
-            }
-
-            .festival-card .name {
-                font-size: 0.62rem;
             }
         }
     </style>
@@ -551,46 +477,23 @@
 
             <!-- Occasion Selector -->
             <div class="section-label">Step 1 — Choose an Occasion</div>
-            <div class="festival-grid">
-                <div class="festival-card fc-birthday" data-f="birthday" onclick="selectFest(this)"><span
-                        class="emoji">🎂</span><span class="name">Birthday</span></div>
-                <div class="festival-card fc-wedding" data-f="wedding" onclick="selectFest(this)"><span
-                        class="emoji">💍</span><span class="name">Wedding</span></div>
-                <div class="festival-card fc-anniversary" data-f="anniversary" onclick="selectFest(this)"><span
-                        class="emoji">💑</span><span class="name">Anniversary</span></div>
-                <div class="festival-card fc-graduation" data-f="graduation" onclick="selectFest(this)"><span
-                        class="emoji">🎓</span><span class="name">Graduation</span></div>
-                <div class="festival-card fc-babyshower" data-f="babyshower" onclick="selectFest(this)"><span
-                        class="emoji">👶</span><span class="name">Baby Shower</span></div>
-                <div class="festival-card fc-thankyou" data-f="thankyou" onclick="selectFest(this)"><span
-                        class="emoji">🙏</span><span class="name">Thank You</span></div>
-                <div class="festival-card fc-holi" data-f="holi" onclick="selectFest(this)"><span
-                        class="emoji">🎨</span><span class="name">Holi</span></div>
-                <div class="festival-card fc-diwali" data-f="diwali" onclick="selectFest(this)"><span
-                        class="emoji">🪔</span><span class="name">Diwali</span></div>
-                <div class="festival-card fc-eid" data-f="eid" onclick="selectFest(this)"><span
-                        class="emoji">☪️</span><span class="name">Eid</span></div>
-                <div class="festival-card fc-ramzan" data-f="ramzan" onclick="selectFest(this)"><span
-                        class="emoji">🌙</span><span class="name">Ramzan</span></div>
-                <div class="festival-card fc-christmas" data-f="christmas" onclick="selectFest(this)"><span
-                        class="emoji">🎄</span><span class="name">Christmas</span></div>
-                <div class="festival-card fc-newyear" data-f="newyear" onclick="selectFest(this)"><span
-                        class="emoji">🎆</span><span class="name">New Year</span></div>
-                <div class="festival-card fc-navratri" data-f="navratri" onclick="selectFest(this)"><span
-                        class="emoji">💃</span><span class="name">Navratri</span></div>
-                <div class="festival-card fc-onam" data-f="onam" onclick="selectFest(this)"><span
-                        class="emoji">🌸</span><span class="name">Onam</span></div>
-                <div class="festival-card fc-lohri" data-f="lohri" onclick="selectFest(this)"><span
-                        class="emoji">🔥</span><span class="name">Lohri</span></div>
-                <div class="festival-card fc-custom" data-f="custom" onclick="selectFest(this)"><span
-                        class="emoji">✨</span><span class="name">Custom</span></div>
+
+            <div id="searchContainer">
+                <div class="search-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" class="search-input"
+                        placeholder="Search or type custom occasion..." onkeyup="renderResults()" autocomplete="off" />
+                </div>
+                <div id="resultsList" class="results-list"></div>
             </div>
-            <div id="customOccasionDiv" class="form-group" style="margin-bottom:0">
-                <label for="customOccasionInput">Name your Occasion</label>
-                <input type="text" id="customOccasionInput" placeholder="e.g. Housewarming, Farewell" maxlength="30" />
-                <div class="field-err" id="errCustom">Enter your custom occasion</div>
+
+            <div id="selectedOccasionDisplay">
+                <span class="emoji" id="selEmoji">✨</span>
+                <span class="name" id="selName">Selected</span>
+                <button class="btn-change" onclick="changeOccasion()">Change</button>
             </div>
-            <div class="field-err" id="errFest">Please select an occasion</div>
+
+            <div class="field-err" id="errFest">Please search and select an occasion</div>
 
             <div class="divider"></div>
 
@@ -670,19 +573,69 @@
             custom: { emoji: '✨', label: 'Custom', greeting: 'Special Wishes!' }
         };
 
-        /* ── Festival select ── */
-        function selectFest(card) {
-            document.querySelectorAll('.festival-card').forEach(c => c.classList.remove('selected'));
-            card.classList.add('selected');
-            selectedFestival = card.dataset.f;
-            hide('errFest');
+        /* ── Search & Select Logic ── */
+        let customOccasionName = '';
 
-            if (selectedFestival === 'custom') {
-                show('customOccasionDiv');
-            } else {
-                hide('customOccasionDiv');
+        function renderResults() {
+            const query = val('searchInput').toLowerCase();
+            const list = document.getElementById('resultsList');
+            list.innerHTML = '';
+
+            let hasExactMatch = false;
+
+            // Render existing occasions
+            for (const [key, meta] of Object.entries(festMeta)) {
+                if (key === 'custom') continue; // Handle custom separately
+
+                if (meta.label.toLowerCase().includes(query)) {
+                    if (meta.label.toLowerCase() === query) hasExactMatch = true;
+
+                    const div = document.createElement('div');
+                    div.className = 'result-item';
+                    div.innerHTML = `<span class="emoji">${meta.emoji}</span><span class="name">${meta.label}</span>`;
+                    div.onclick = () => selectFest(key, meta.label, meta.emoji);
+                    list.appendChild(div);
+                }
+            }
+
+            // Always offer a Custom Option if there's a custom query
+            if (query.trim().length > 0 && !hasExactMatch) {
+                const customLabel = query.trim().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.innerHTML = `<span class="emoji">✨</span><span class="name">${customLabel}</span><span class="custom-create-hint">Create</span>`;
+                div.onclick = () => {
+                    customOccasionName = customLabel;
+                    selectFest('custom', customLabel, '✨');
+                };
+                list.insertBefore(div, list.firstChild); // Put custom at top if typing
             }
         }
+
+        function selectFest(key, label, emoji) {
+            selectedFestival = key;
+            if (key !== 'custom') customOccasionName = ''; // Reset if standard chosen
+
+            hide('errFest');
+            hide('searchContainer');
+
+            document.getElementById('selEmoji').textContent = emoji;
+            document.getElementById('selName').textContent = label;
+            document.getElementById('selectedOccasionDisplay').style.display = 'flex';
+        }
+
+        function changeOccasion() {
+            selectedFestival = null;
+            customOccasionName = '';
+            document.getElementById('selectedOccasionDisplay').style.display = 'none';
+            document.getElementById('searchInput').value = '';
+            show('searchContainer');
+            renderResults();
+            document.getElementById('searchInput').focus();
+        }
+
+        // Initial render on load
+        window.onload = () => { renderResults(); };
 
         /* ── Char counter ── */
         const msgEl = document.getElementById('message');
@@ -705,7 +658,6 @@
         function validate() {
             let ok = true;
             if (!selectedFestival) { show('errFest'); ok = false; } else hide('errFest');
-            if (selectedFestival === 'custom' && !val('customOccasionInput')) { show('errCustom'); ok = false; } else hide('errCustom');
             if (!val('senderName')) { show('errSender'); ok = false; } else hide('errSender');
             if (!val('receiverName')) { show('errReceiver'); ok = false; } else hide('errReceiver');
             if (!val('message')) { show('errMsg'); ok = false; } else hide('errMsg');
@@ -724,7 +676,7 @@
             };
 
             if (selectedFestival === 'custom') {
-                data.customName = val('customOccasionInput');
+                data.customName = customOccasionName;
             }
             const encoded = encodeGreeting(data);
             const base = window.location.href.replace(/index\.html.*$/, '').replace(/\/$/, '');
