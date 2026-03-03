@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Festival Greeting — FestiveLink</title>
+    <meta name="description" content="Someone sent you a personalised festival greeting!" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;1,400&family=Baloo+2:wght@700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+            transition: background 0.5s ease;
+        }
+
+        /* ── Festival backgrounds ── */
+        body.holi {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FFD93D 35%, #6BCF63 65%, #4D9DE0 100%);
+        }
+
+        body.diwali {
+            background: radial-gradient(ellipse at center, #2D0B4E 0%, #1a0533 100%);
+        }
+
+        body.eid {
+            background: linear-gradient(180deg, #0D3B2E 0%, #1A5C46 100%);
+        }
+
+        body.ramzan {
+            background: linear-gradient(160deg, #0F2A3D 0%, #1E3A5F 100%);
+        }
+
+        body.christmas {
+            background: linear-gradient(180deg, #1A3C34 0%, #0D2B24 100%);
+        }
+
+        body.newyear {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        }
+
+        body.navratri {
+            background: linear-gradient(135deg, #2D1B69 0%, #4A1942 100%);
+        }
+
+        body.onam {
+            background: linear-gradient(135deg, #134E5E 0%, #71B280 100%);
+        }
+
+        body.lohri {
+            background: linear-gradient(160deg, #1a0000 0%, #3D1515 100%);
+        }
+
+        /* ── Life Event backgrounds ── */
+        body.birthday {
+            background: linear-gradient(135deg, #E91E63 0%, #FF6F91 50%, #FFC3A0 100%);
+        }
+
+        body.wedding {
+            background: radial-gradient(ellipse at center, #1a0f00 0%, #2C1503 40%, #3D1F08 100%);
+        }
+
+        body.anniversary {
+            background: linear-gradient(135deg, #8B0000 0%, #C0392B 50%, #E74C3C 100%);
+        }
+
+        body.graduation {
+            background: linear-gradient(135deg, #0C2340 0%, #1B4F72 50%, #2E86C1 100%);
+        }
+
+        body.babyshower {
+            background: linear-gradient(135deg, #FDCBF1 0%, #E6DEE9 50%, #A6C0FE 100%);
+        }
+
+        body.thankyou {
+            background: linear-gradient(135deg, #0D5C63 0%, #1ABC9C 100%);
+        }
+
+        /* ── Canvas ── */
+        #canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Overlay ── */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0);
+            opacity: 0;
+            transition: background .35s ease, opacity .35s ease;
+        }
+
+        .overlay.show {
+            background: rgba(0, 0, 0, 0.55);
+            opacity: 1;
+            backdrop-filter: blur(5px);
+        }
+
+        /* ── Popup ── */
+        .popup {
+            background: #fff;
+            border-radius: 22px;
+            padding: 40px 32px 32px;
+            width: 92%;
+            max-width: 480px;
+            position: relative;
+            transform: scale(0.78) translateY(20px);
+            opacity: 0;
+            transition: transform .44s cubic-bezier(.34, 1.56, .64, 1), opacity .44s ease;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+        }
+
+        .overlay.show .popup {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        /* Festival accent borders */
+        .popup.holi {
+            border-top: 5px solid #FF6B6B;
+        }
+
+        .popup.diwali {
+            border-top: 5px solid #FFD700;
+            background: #FFF9EE;
+        }
+
+        .popup.eid {
+            border-top: 5px solid #C0A060;
+        }
+
+        .popup.ramzan {
+            border-top: 5px solid #C9A84C;
+        }
+
+        .popup.christmas {
+            border-top: 5px solid #C0392B;
+        }
+
+        .popup.newyear {
+            border-top: 5px solid #F39C12;
+            background: #0D0D1A;
+            color: #F0F0F0;
+        }
+
+        .popup.navratri {
+            border-top: 5px solid #9B59B6;
+        }
+
+        .popup.onam {
+            border-top: 5px solid #27AE60;
+        }
+
+        .popup.lohri {
+            border-top: 5px solid #E67E22;
+        }
+
+        /* Life Event popup borders */
+        .popup.birthday {
+            border-top: 5px solid #E91E63;
+        }
+
+        .popup.wedding {
+            border-top: 5px solid #D4AF37;
+            background: #FFFDF5;
+        }
+
+        .popup.anniversary {
+            border-top: 5px solid #E74C3C;
+        }
+
+        .popup.graduation {
+            border-top: 5px solid #3498DB;
+        }
+
+        .popup.babyshower {
+            border-top: 5px solid #FF9FF3;
+        }
+
+        .popup.thankyou {
+            border-top: 5px solid #1ABC9C;
+        }
+
+        /* Close */
+        .btn-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.07);
+            color: #999;
+            font-size: .95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background .18s, color .18s;
+        }
+
+        .btn-close:hover {
+            background: rgba(0, 0, 0, 0.15);
+            color: #444;
+        }
+
+        .popup.newyear .btn-close {
+            background: rgba(255, 255, 255, 0.1);
+            color: #aaa;
+        }
+
+        /* Greeting */
+        .fest-greeting {
+            font-family: 'Baloo 2', cursive;
+            font-weight: 800;
+            font-size: 1.75rem;
+            text-align: center;
+            margin-bottom: 2px;
+        }
+
+        .receiver-name {
+            font-size: 1.9rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        /* Festival text colours */
+        .holi .fest-greeting {
+            color: #FF6B6B;
+        }
+
+        .holi .receiver-name {
+            color: #E85D04;
+        }
+
+        .diwali .fest-greeting {
+            color: #FFD700;
+        }
+
+        .diwali .receiver-name {
+            color: #FF8C00;
+        }
+
+        .eid .fest-greeting {
+            color: #C9A84C;
+        }
+
+        .eid .receiver-name {
+            color: #2E8B57;
+        }
+
+        .ramzan .fest-greeting {
+            color: #C9A84C;
+        }
+
+        .ramzan .receiver-name {
+            color: #4A90D9;
+        }
+
+        .christmas .fest-greeting {
+            color: #C0392B;
+        }
+
+        .christmas .receiver-name {
+            color: #27AE60;
+        }
+
+        .newyear .fest-greeting {
+            color: #F39C12;
+        }
+
+        .newyear .receiver-name {
+            color: #FFD700;
+        }
+
+        .navratri .fest-greeting {
+            color: #9B59B6;
+        }
+
+        .navratri .receiver-name {
+            color: #E74C3C;
+        }
+
+        .onam .fest-greeting {
+            color: #27AE60;
+        }
+
+        .onam .receiver-name {
+            color: #F1C40F;
+        }
+
+        .lohri .fest-greeting {
+            color: #E74C3C;
+        }
+
+        .lohri .receiver-name {
+            color: #E67E22;
+        }
+
+        /* Life Event text colours */
+        .birthday .fest-greeting {
+            color: #E91E63;
+        }
+
+        .birthday .receiver-name {
+            color: #AD1457;
+        }
+
+        .wedding .fest-greeting {
+            color: #D4AF37;
+        }
+
+        .wedding .receiver-name {
+            color: #8B6914;
+        }
+
+        .anniversary .fest-greeting {
+            color: #E74C3C;
+        }
+
+        .anniversary .receiver-name {
+            color: #C0392B;
+        }
+
+        .graduation .fest-greeting {
+            color: #3498DB;
+        }
+
+        .graduation .receiver-name {
+            color: #1A5276;
+        }
+
+        .babyshower .fest-greeting {
+            color: #FF69B4;
+        }
+
+        .babyshower .receiver-name {
+            color: #C850C0;
+        }
+
+        .thankyou .fest-greeting {
+            color: #1ABC9C;
+        }
+
+        .thankyou .receiver-name {
+            color: #117A65;
+        }
+
+        .popup-divider {
+            height: 1px;
+            background: rgba(0, 0, 0, 0.08);
+            margin: 14px 0;
+        }
+
+        .popup.newyear .popup-divider {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .msg-text {
+            font-size: 1rem;
+            line-height: 1.75;
+            color: #444;
+            margin-bottom: 14px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .popup.newyear .msg-text {
+            color: rgba(240, 240, 240, 0.88);
+        }
+
+        .sender-line {
+            font-style: italic;
+            font-size: .9rem;
+            color: #999;
+            text-align: right;
+        }
+
+        .popup.newyear .sender-line {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            background: #1E3A5F;
+            color: #fff;
+            border: none;
+            border-radius: 11px;
+            font-family: 'Poppins', sans-serif;
+            font-size: .9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background .18s, transform .18s;
+        }
+
+        .btn-cta:hover {
+            background: #2C5282;
+            transform: translateY(-2px);
+        }
+
+        /* ── Error Page ── */
+        .error-page {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #0A0E1A;
+            color: #E8ECF4;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 40px;
+            z-index: 200;
+        }
+
+        .error-page.show {
+            display: flex;
+        }
+
+        .error-page .err-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .error-page h1 {
+            font-size: 1.75rem;
+            margin-bottom: 10px;
+        }
+
+        .error-page p {
+            color: #8892A4;
+            margin-bottom: 28px;
+            max-width: 340px;
+        }
+
+        .error-page a {
+            color: #fff;
+            background: #E85D04;
+            padding: 12px 28px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background .18s;
+        }
+
+        .error-page a:hover {
+            background: #C24E02;
+        }
+
+        @media (max-width: 480px) {
+            .popup {
+                padding: 28px 20px 24px;
+            }
+
+            .fest-greeting {
+                font-size: 1.5rem;
+            }
+
+            .receiver-name {
+                font-size: 1.65rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <!-- Popup Overlay -->
+    <div class="overlay" id="overlay">
+        <div class="popup" id="popup">
+            <button class="btn-close" onclick="closePopup()">✕</button>
+            <div class="fest-greeting" id="festGreet"></div>
+            <div class="receiver-name" id="recvName"></div>
+            <div class="popup-divider"></div>
+            <div class="msg-text" id="msgText"></div>
+            <div class="sender-line" id="senderLine"></div>
+            <a class="btn-cta" href="index.html">🎉 Create Your Own FestiveLink</a>
+        </div>
+    </div>
+
+    <!-- Error Page -->
+    <div class="error-page" id="errorPage">
+        <div class="err-icon">😕</div>
+        <h1>Invalid Link</h1>
+        <p>This greeting link appears to be broken or expired. Ask the sender to share it again.</p>
+        <a href="index.html">Create Your Own Greeting →</a>
+    </div>
+
+    <script>
+        /* ══════════════════════════════
+           Festival Config
+        ══════════════════════════════ */
+        const FESTIVALS = {
+            holi: { greeting: '🎨 Happy Holi!', particle: 'confetti', colors: ['#FF6B6B', '#FFD93D', '#6BCF63', '#4D9DE0', '#FF69B4', '#FF8C00'] },
+            diwali: { greeting: '🪔 Happy Diwali!', particle: 'fireworks', colors: ['#FFD700', '#FF8C00', '#FFF', '#FFB347', '#FFEC8B'] },
+            eid: { greeting: '☪️ Eid Mubarak!', particle: 'stars', colors: ['#C0A060', '#FFD700', '#FFF', '#C9A84C'] },
+            ramzan: { greeting: '🌙 Ramzan Mubarak!', particle: 'stars', colors: ['#C9A84C', '#FFD700', '#FFF', '#4A90D9'] },
+            christmas: { greeting: '🎄 Merry Christmas!', particle: 'snow', colors: ['#FFF', 'rgba(220,240,255,0.9)', 'rgba(255,255,255,0.7)'] },
+            newyear: { greeting: '🎆 Happy New Year!', particle: 'fireworks', colors: ['#FFD700', '#FF6B6B', '#4D9DE0', '#6BCF63', '#FF69B4', '#FFF'] },
+            navratri: { greeting: '💃 Happy Navratri!', particle: 'confetti', colors: ['#9B59B6', '#E74C3C', '#F39C12', '#8E44AD'] },
+            onam: { greeting: '🌸 Happy Onam!', particle: 'petals', colors: ['#27AE60', '#F1C40F', '#E74C3C', '#FF8C00', '#FFF2CC'] },
+            lohri: { greeting: '🔥 Happy Lohri!', particle: 'fire', colors: ['#E74C3C', '#E67E22', '#F39C12', '#FF6B6B', '#FFD700'] },
+            birthday: { greeting: '🎂 Happy Birthday!', particle: 'confetti', colors: ['#E91E63', '#FF6F91', '#FFC3A0', '#FFD700', '#4D9DE0', '#6BCF63'] },
+            wedding: { greeting: '💍 Happy Wedding!', particle: 'stars', colors: ['#D4AF37', '#FFD700', '#FFF8DC', '#FFFACD', '#FFF'] },
+            anniversary: { greeting: '💑 Happy Anniversary!', particle: 'confetti', colors: ['#E74C3C', '#FF6B6B', '#FF1493', '#FFD700', '#FFF'] },
+            graduation: { greeting: '🎓 Congratulations, Graduate!', particle: 'confetti', colors: ['#3498DB', '#1B4F72', '#FFD700', '#FFF', '#5DADE2'] },
+            babyshower: { greeting: '👶 Welcome Little One!', particle: 'petals', colors: ['#FF9FF3', '#FDCBF1', '#A6C0FE', '#FFC3A0', '#FFF'] },
+            thankyou: { greeting: '🙏 Thank You So Much!', particle: 'stars', colors: ['#1ABC9C', '#48C9B0', '#76D7C4', '#FFD700', '#FFF'] }
+        };
+
+        /* ══════════════════════════════
+           Decoder
+        ══════════════════════════════ */
+        function decodeGreeting(enc) {
+            return JSON.parse(decodeURIComponent(atob(enc)));
+        }
+
+        /* ══════════════════════════════
+           Canvas / Particle Engine
+        ══════════════════════════════ */
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let W, H, particles = [], fireworks = [], animId, pType, pColors;
+
+        function resize() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        /* Generic particle */
+        class P {
+            constructor() { this.init(); }
+            init() {
+                this.color = pColors[Math.floor(Math.random() * pColors.length)];
+                if (pType === 'confetti' || pType === 'petals') {
+                    this.x = Math.random() * W; this.y = -12;
+                    this.sz = Math.random() * 7 + 4;
+                    this.vx = (Math.random() - .5) * 2.5;
+                    this.vy = Math.random() * 2 + 1;
+                    this.rot = Math.random() * 360;
+                    this.rs = (Math.random() - .5) * 5;
+                    this.op = Math.random() * .5 + .5;
+                    this.shape = pType === 'petals' ? 'ellipse' : (Math.random() > .5 ? 'rect' : 'circle');
+                } else if (pType === 'snow') {
+                    this.x = Math.random() * W; this.y = -8;
+                    this.sz = Math.random() * 4 + 2;
+                    this.vx = (Math.random() - .5) * .8;
+                    this.vy = Math.random() * 1.2 + .5;
+                    this.op = Math.random() * .6 + .3;
+                } else if (pType === 'stars') {
+                    this.x = Math.random() * W; this.y = Math.random() * H;
+                    this.sz = Math.random() * 2.5 + .8;
+                    this.phase = Math.random() * Math.PI * 2;
+                    this.speed = Math.random() * .025 + .01;
+                    this.maxOp = Math.random() * .8 + .2;
+                    this.op = 0; this.static = true;
+                } else if (pType === 'fire') {
+                    this.x = Math.random() * W; this.y = H + 8;
+                    this.sz = Math.random() * 5 + 2;
+                    this.vx = (Math.random() - .5) * 1.5;
+                    this.vy = -(Math.random() * 2.5 + 1.2);
+                    this.life = 1; this.decay = Math.random() * .018 + .01;
+                }
+            }
+            update() {
+                if (pType === 'confetti' || pType === 'petals') {
+                    if (pType === 'petals') this.vx = Math.sin(Date.now() * .001 + this.x * .01) * .8;
+                    this.x += this.vx; this.y += this.vy; this.rot += this.rs;
+                    if (this.y > H + 16) this.init();
+                } else if (pType === 'snow') {
+                    this.x += this.vx; this.y += this.vy;
+                    if (this.y > H + 10) this.init();
+                } else if (pType === 'stars') {
+                    this.phase += this.speed;
+                    this.op = ((Math.sin(this.phase) + 1) / 2) * this.maxOp;
+                } else if (pType === 'fire') {
+                    this.x += this.vx; this.y += this.vy;
+                    this.life -= this.decay; this.sz *= .997;
+                    if (this.life <= 0) this.init();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = (this.op !== undefined) ? this.op : this.life;
+                ctx.fillStyle = this.color;
+                ctx.translate(this.x, this.y);
+                if (this.rot !== undefined) ctx.rotate(this.rot * Math.PI / 180);
+                if (this.shape === 'rect') {
+                    ctx.fillRect(-this.sz / 2, -this.sz / 4, this.sz, this.sz / 2);
+                } else if (this.shape === 'ellipse') {
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.sz, this.sz / 2, 0, 0, Math.PI * 2); ctx.fill();
+                } else if (pType === 'stars') {
+                    drawStar(ctx, 0, 0, 4, this.sz, this.sz / 2); ctx.fill();
+                } else {
+                    ctx.beginPath(); ctx.arc(0, 0, this.sz / 2, 0, Math.PI * 2); ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        function drawStar(ctx, cx, cy, spikes, outer, inner) {
+            let rot = -Math.PI / 2, step = Math.PI / spikes;
+            ctx.beginPath(); ctx.moveTo(cx, cy - outer);
+            for (let i = 0; i < spikes; i++) {
+                ctx.lineTo(cx + Math.cos(rot) * outer, cy + Math.sin(rot) * outer); rot += step;
+                ctx.lineTo(cx + Math.cos(rot) * inner, cy + Math.sin(rot) * inner); rot += step;
+            }
+            ctx.closePath();
+        }
+
+        /* Firework */
+        class FW {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * W; this.y = Math.random() * H * .55;
+                this.delay = Math.floor(Math.random() * 90) + 10;
+                this.burst = []; this.done = false;
+                this.color = pColors[Math.floor(Math.random() * pColors.length)];
+            }
+            update() {
+                if (this.delay-- > 0) return;
+                if (!this.burst.length && !this.done) { this.explode(); return; }
+                this.burst = this.burst.filter(p => { p.x += p.vx; p.y += p.vy; p.vy += .055; p.vx *= .99; p.a -= .016; return p.a > 0; });
+                if (!this.burst.length) this.done = true;
+            }
+            explode() {
+                for (let i = 0; i < 55; i++) {
+                    const angle = (Math.PI * 2 / 55) * i, spd = Math.random() * 4 + 1;
+                    this.burst.push({ x: this.x, y: this.y, vx: Math.cos(angle) * spd, vy: Math.sin(angle) * spd, a: 1, sz: Math.random() * 2.5 + 1, color: this.color });
+                }
+            }
+            draw() {
+                this.burst.forEach(p => {
+                    ctx.save(); ctx.globalAlpha = p.a; ctx.fillStyle = p.color;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+                });
+            }
+        }
+
+        function initParticles(festival) {
+            const cfg = FESTIVALS[festival]; if (!cfg) return;
+            pType = cfg.particle; pColors = cfg.colors;
+            particles = []; fireworks = [];
+            if (pType === 'fireworks') {
+                for (let i = 0; i < 4; i++) fireworks.push(new FW());
+            } else {
+                const count = pType === 'stars' ? 90 : pType === 'snow' ? 110 : 130;
+                for (let i = 0; i < count; i++) {
+                    const p = new P();
+                    if (pType !== 'stars') p.y = Math.random() * H; // spread initial positions
+                    particles.push(p);
+                }
+            }
+            animate();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, W, H);
+            if (pType === 'fireworks') {
+                fireworks.forEach(fw => { fw.update(); fw.draw(); });
+                fireworks = fireworks.filter(fw => !fw.done);
+                if (fireworks.length < 4) fireworks.push(new FW());
+            } else {
+                particles.forEach(p => { p.update(); p.draw(); });
+            }
+            animId = requestAnimationFrame(animate);
+        }
+
+        /* ══════════════════════════════
+           Popup
+        ══════════════════════════════ */
+        function showPopup() {
+            document.getElementById('overlay').classList.add('show');
+        }
+
+        function closePopup() {
+            const ov = document.getElementById('overlay');
+            ov.style.opacity = '0';
+            setTimeout(() => { ov.style.display = 'none'; }, 300);
+        }
+
+        /* ══════════════════════════════
+           Init Viewer
+        ══════════════════════════════ */
+        function init() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const encoded = params.get('d');
+                if (!encoded) throw new Error('No data');
+
+                const data = decodeGreeting(encoded);
+
+                // Validate
+                const allowed = Object.keys(FESTIVALS);
+                if (!data.sender || !data.receiver || !data.message || !allowed.includes(data.festival)) throw new Error('Invalid data');
+
+                const fest = FESTIVALS[data.festival];
+
+                // Apply theme class
+                document.body.classList.add(data.festival);
+
+                // Set page title
+                document.title = `${fest.greeting} — FestiveLink`;
+
+                // Fill popup
+                document.getElementById('festGreet').textContent = fest.greeting;
+                document.getElementById('recvName').textContent = `Dear ${data.receiver},`;
+                document.getElementById('msgText').textContent = data.message;
+                document.getElementById('senderLine').textContent = `With love, ${data.sender} ❤️`;
+
+                // Apply theme class to popup
+                document.getElementById('popup').classList.add(data.festival);
+
+                // Start particles
+                initParticles(data.festival);
+
+                // Show popup after short delay
+                setTimeout(showPopup, 320);
+
+            } catch (e) {
+                document.getElementById('errorPage').classList.add('show');
+            }
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

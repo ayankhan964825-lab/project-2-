@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FestiveLink — Create Your Personalised Greeting</title>
+    <meta name="description"
+        content="Create personalized greeting links for festivals, birthdays, weddings & more — share instantly on WhatsApp. Free. No signup." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Baloo+2:wght@700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --orange: #E85D04;
+            --navy: #1E3A5F;
+            --bg: #0A0E1A;
+            --border: rgba(255, 255, 255, 0.09);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --text: #E8ECF4;
+            --muted: #8892A4;
+            --success: #27AE60;
+            --error: #E74C3C;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 15% 20%, rgba(30, 58, 95, 0.35) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 80%, rgba(232, 93, 4, 0.18) 0%, transparent 55%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 580px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        /* ── Header ── */
+        .header {
+            text-align: center;
+            padding: 52px 0 36px;
+        }
+
+        .logo {
+            font-family: 'Baloo 2', cursive;
+            font-size: 2.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #E85D04 30%, #FFB347 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            color: var(--muted);
+            font-size: 0.9375rem;
+            margin-top: 6px;
+        }
+
+        /* ── Card ── */
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px 32px;
+            box-shadow: 0 8px 48px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--muted);
+            margin-bottom: 14px;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 24px 0;
+        }
+
+        /* ── Festival Grid ── */
+        .festival-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .festival-card {
+            background: var(--input-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform .18s, background .18s, border-color .18s;
+        }
+
+        .festival-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .festival-card .emoji {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .festival-card .name {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--muted);
+            transition: color .18s;
+        }
+
+        /* Selected states */
+        .fc-holi.selected {
+            border-color: #FF6B6B;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .fc-holi.selected .name {
+            color: #FF6B6B;
+        }
+
+        .fc-diwali.selected {
+            border-color: #FFD700;
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .fc-diwali.selected .name {
+            color: #FFD700;
+        }
+
+        .fc-eid.selected {
+            border-color: #C0A060;
+            background: rgba(192, 160, 96, 0.1);
+        }
+
+        .fc-eid.selected .name {
+            color: #C0A060;
+        }
+
+        .fc-ramzan.selected {
+            border-color: #C9A84C;
+            background: rgba(201, 168, 76, 0.1);
+        }
+
+        .fc-ramzan.selected .name {
+            color: #C9A84C;
+        }
+
+        .fc-christmas.selected {
+            border-color: #E74C3C;
+            background: rgba(192, 57, 43, 0.1);
+        }
+
+        .fc-christmas.selected .name {
+            color: #E74C3C;
+        }
+
+        .fc-newyear.selected {
+            border-color: #F39C12;
+            background: rgba(243, 156, 18, 0.1);
+        }
+
+        .fc-newyear.selected .name {
+            color: #F39C12;
+        }
+
+        .fc-navratri.selected {
+            border-color: #9B59B6;
+            background: rgba(155, 89, 182, 0.1);
+        }
+
+        .fc-navratri.selected .name {
+            color: #9B59B6;
+        }
+
+        .fc-onam.selected {
+            border-color: #27AE60;
+            background: rgba(39, 174, 96, 0.1);
+        }
+
+        .fc-onam.selected .name {
+            color: #27AE60;
+        }
+
+        .fc-lohri.selected {
+            border-color: #E67E22;
+            background: rgba(230, 126, 34, 0.1);
+        }
+
+        .fc-lohri.selected .name {
+            color: #E67E22;
+        }
+
+        /* ── Life Events ── */
+        .fc-birthday.selected {
+            border-color: #E91E63;
+            background: rgba(233, 30, 99, 0.1);
+        }
+
+        .fc-birthday.selected .name {
+            color: #E91E63;
+        }
+
+        .fc-wedding.selected {
+            border-color: #D4AF37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .fc-wedding.selected .name {
+            color: #D4AF37;
+        }
+
+        .fc-anniversary.selected {
+            border-color: #E74C3C;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .fc-anniversary.selected .name {
+            color: #E74C3C;
+        }
+
+        .fc-graduation.selected {
+            border-color: #3498DB;
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .fc-graduation.selected .name {
+            color: #3498DB;
+        }
+
+        .fc-babyshower.selected {
+            border-color: #FF9FF3;
+            background: rgba(255, 159, 243, 0.1);
+        }
+
+        .fc-babyshower.selected .name {
+            color: #FF9FF3;
+        }
+
+        .fc-thankyou.selected {
+            border-color: #1ABC9C;
+            background: rgba(26, 188, 156, 0.1);
+        }
+
+        .fc-thankyou.selected .name {
+            color: #1ABC9C;
+        }
+
+        /* ── Inputs ── */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 7px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 9px;
+            padding: 13px 15px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9375rem;
+            color: var(--text);
+            outline: none;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(136, 146, 164, 0.55);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--orange);
+            background: rgba(232, 93, 4, 0.05);
+            box-shadow: 0 0 0 3px rgba(232, 93, 4, 0.14);
+        }
+
+        .form-group textarea {
+            min-height: 108px;
+            resize: vertical;
+        }
+
+        .char-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 5px;
+        }
+
+        .char-count {
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+
+        .char-count.warn {
+            color: #F39C12;
+        }
+
+        .char-count.over {
+            color: var(--error);
+        }
+
+        .field-err {
+            font-size: 0.72rem;
+            color: var(--error);
+            margin-top: 4px;
+            display: none;
+        }
+
+        /* ── Buttons ── */
+        .btn-generate {
+            width: 100%;
+            height: 54px;
+            background: linear-gradient(135deg, #E85D04 0%, #FF9040 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform .18s, box-shadow .18s, opacity .18s;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(232, 93, 4, 0.38);
+        }
+
+        .btn-generate:active {
+            transform: scale(0.98);
+        }
+
+        .btn-generate:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ── Output ── */
+        .output-section {
+            display: none;
+            margin-top: 22px;
+            animation: slideUp .38s ease;
+        }
+
+        .output-section.show {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .link-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .link-box {
+            flex: 1;
+            background: rgba(39, 174, 96, 0.07);
+            border: 1.5px solid rgba(39, 174, 96, 0.28);
+            border-radius: 9px;
+            padding: 11px 14px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.78rem;
+            color: #5DADE2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-copy {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            background: rgba(39, 174, 96, 0.12);
+            border: 1.5px solid rgba(39, 174, 96, 0.28);
+            border-radius: 9px;
+            color: var(--success);
+            cursor: pointer;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background .18s;
+            position: relative;
+        }
+
+        .btn-copy:hover {
+            background: rgba(39, 174, 96, 0.22);
+        }
+
+        .btn-copy.copied {
+            background: rgba(39, 174, 96, 0.28);
+            border-color: var(--success);
+        }
+
+        .btn-whatsapp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            height: 50px;
+            background: #25D366;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background .18s, transform .18s;
+        }
+
+        .btn-whatsapp:hover {
+            background: #1DAA5A;
+            transform: translateY(-2px);
+        }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .card {
+                padding: 24px 18px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .festival-card .emoji {
+                font-size: 1.5rem;
+            }
+
+            .festival-card .name {
+                font-size: 0.68rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <header class="header">
+            <div class="logo">✨ FestiveLink</div>
+            <p class="tagline">Create a personalised greeting &amp; share it instantly</p>
+        </header>
+
+        <div class="card">
+
+            <!-- Occasion Selector -->
+            <div class="section-label">Step 1 — Choose an Occasion</div>
+            <div class="festival-grid">
+                <div class="festival-card fc-birthday" data-f="birthday" onclick="selectFest(this)"><span
+                        class="emoji">🎂</span><span class="name">Birthday</span></div>
+                <div class="festival-card fc-wedding" data-f="wedding" onclick="selectFest(this)"><span
+                        class="emoji">💍</span><span class="name">Wedding</span></div>
+                <div class="festival-card fc-anniversary" data-f="anniversary" onclick="selectFest(this)"><span
+                        class="emoji">💑</span><span class="name">Anniversary</span></div>
+                <div class="festival-card fc-graduation" data-f="graduation" onclick="selectFest(this)"><span
+                        class="emoji">🎓</span><span class="name">Graduation</span></div>
+                <div class="festival-card fc-babyshower" data-f="babyshower" onclick="selectFest(this)"><span
+                        class="emoji">👶</span><span class="name">Baby Shower</span></div>
+                <div class="festival-card fc-thankyou" data-f="thankyou" onclick="selectFest(this)"><span
+                        class="emoji">🙏</span><span class="name">Thank You</span></div>
+                <div class="festival-card fc-holi" data-f="holi" onclick="selectFest(this)"><span
+                        class="emoji">🎨</span><span class="name">Holi</span></div>
+                <div class="festival-card fc-diwali" data-f="diwali" onclick="selectFest(this)"><span
+                        class="emoji">🪔</span><span class="name">Diwali</span></div>
+                <div class="festival-card fc-eid" data-f="eid" onclick="selectFest(this)"><span
+                        class="emoji">☪️</span><span class="name">Eid</span></div>
+                <div class="festival-card fc-ramzan" data-f="ramzan" onclick="selectFest(this)"><span
+                        class="emoji">🌙</span><span class="name">Ramzan</span></div>
+                <div class="festival-card fc-christmas" data-f="christmas" onclick="selectFest(this)"><span
+                        class="emoji">🎄</span><span class="name">Christmas</span></div>
+                <div class="festival-card fc-newyear" data-f="newyear" onclick="selectFest(this)"><span
+                        class="emoji">🎆</span><span class="name">New Year</span></div>
+                <div class="festival-card fc-navratri" data-f="navratri" onclick="selectFest(this)"><span
+                        class="emoji">💃</span><span class="name">Navratri</span></div>
+                <div class="festival-card fc-onam" data-f="onam" onclick="selectFest(this)"><span
+                        class="emoji">🌸</span><span class="name">Onam</span></div>
+                <div class="festival-card fc-lohri" data-f="lohri" onclick="selectFest(this)"><span
+                        class="emoji">🔥</span><span class="name">Lohri</span></div>
+            </div>
+            <div class="field-err" id="errFest">Please select an occasion</div>
+
+            <div class="divider"></div>
+
+            <!-- Names -->
+            <div class="section-label">Step 2 — Names</div>
+            <div class="form-row">
+                <div class="form-group" style="margin-bottom:0">
+                    <label for="senderName">Your Name</label>
+                    <input type="text" id="senderName" placeholder="e.g. Priya" maxlength="50" />
+                    <div class="field-err" id="errSender">Enter your name</div>
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label for="receiverName">Receiver's Name</label>
+                    <input type="text" id="receiverName" placeholder="e.g. Rahul" maxlength="50" />
+                    <div class="field-err" id="errReceiver">Enter receiver's name</div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Message -->
+            <div class="section-label">Step 3 — Your Message</div>
+            <div class="form-group" style="margin-bottom:0">
+                <label for="message">Personal Message</label>
+                <textarea id="message" placeholder="Write your heartfelt message here..." maxlength="500"></textarea>
+                <div class="char-row"><span class="char-count" id="charCount">0 / 500</span></div>
+                <div class="field-err" id="errMsg">Please write a message</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Generate -->
+            <button class="btn-generate" id="btnGenerate" onclick="generateLink()">
+                <span>✨</span> Generate Greeting Link
+            </button>
+
+            <!-- Output -->
+            <div class="output-section" id="outputSection">
+                <div class="divider"></div>
+                <div class="section-label">🎉 Your link is ready — share it!</div>
+                <div class="link-row">
+                    <div class="link-box" id="linkBox">—</div>
+                    <button class="btn-copy" id="btnCopy" onclick="copyLink()" title="Copy link">📋</button>
+                </div>
+                <a class="btn-whatsapp" id="btnWA" href="#" target="_blank" rel="noopener">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path
+                            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    Share on WhatsApp
+                </a>
+            </div>
+        </div>
+
+        <footer class="footer">Made with ❤️ — FestiveLink v1.0</footer>
+    </div>
+
+    <script>
+        /* ── State ── */
+        let selectedFestival = null;
+        const festMeta = {
+            birthday: { emoji: '🎂', label: 'Birthday', greeting: 'Happy Birthday!' },
+            wedding: { emoji: '💍', label: 'Wedding', greeting: 'Happy Wedding!' },
+            anniversary: { emoji: '💑', label: 'Anniversary', greeting: 'Happy Anniversary!' },
+            graduation: { emoji: '🎓', label: 'Graduation', greeting: 'Congratulations, Graduate!' },
+            babyshower: { emoji: '👶', label: 'Baby Shower', greeting: 'Welcome Little One!' },
+            thankyou: { emoji: '🙏', label: 'Thank You', greeting: 'Thank You So Much!' },
+            holi: { emoji: '🎨', label: 'Holi', greeting: 'Happy Holi!' },
+            diwali: { emoji: '🪔', label: 'Diwali', greeting: 'Happy Diwali!' },
+            eid: { emoji: '☪️', label: 'Eid', greeting: 'Eid Mubarak!' },
+            ramzan: { emoji: '🌙', label: 'Ramzan', greeting: 'Ramzan Mubarak!' },
+            christmas: { emoji: '🎄', label: 'Christmas', greeting: 'Merry Christmas!' },
+            newyear: { emoji: '🎆', label: 'New Year', greeting: 'Happy New Year!' },
+            navratri: { emoji: '💃', label: 'Navratri', greeting: 'Happy Navratri!' },
+            onam: { emoji: '🌸', label: 'Onam', greeting: 'Happy Onam!' },
+            lohri: { emoji: '🔥', label: 'Lohri', greeting: 'Happy Lohri!' }
+        };
+
+        /* ── Festival select ── */
+        function selectFest(card) {
+            document.querySelectorAll('.festival-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedFestival = card.dataset.f;
+            hide('errFest');
+        }
+
+        /* ── Char counter ── */
+        const msgEl = document.getElementById('message');
+        const charEl = document.getElementById('charCount');
+        msgEl.addEventListener('input', () => {
+            const n = msgEl.value.length;
+            charEl.textContent = `${n} / 500`;
+            charEl.className = 'char-count' + (n > 490 ? ' over' : n > 450 ? ' warn' : '');
+        });
+
+        /* ── Helpers ── */
+        function show(id) { document.getElementById(id).style.display = 'block'; }
+        function hide(id) { document.getElementById(id).style.display = 'none'; }
+        function val(id) { return document.getElementById(id).value.trim(); }
+
+        /* ── Encode ── */
+        function encodeGreeting(data) { return btoa(encodeURIComponent(JSON.stringify(data))); }
+
+        /* ── Validate ── */
+        function validate() {
+            let ok = true;
+            if (!selectedFestival) { show('errFest'); ok = false; } else hide('errFest');
+            if (!val('senderName')) { show('errSender'); ok = false; } else hide('errSender');
+            if (!val('receiverName')) { show('errReceiver'); ok = false; } else hide('errReceiver');
+            if (!val('message')) { show('errMsg'); ok = false; } else hide('errMsg');
+            return ok;
+        }
+
+        /* ── Generate ── */
+        function generateLink() {
+            if (!validate()) return;
+            const data = {
+                sender: val('senderName'),
+                receiver: val('receiverName'),
+                message: val('message'),
+                festival: selectedFestival,
+                version: '1.0'
+            };
+            const encoded = encodeGreeting(data);
+            const base = window.location.href.replace(/index\.html.*$/, '').replace(/\/$/, '');
+            const link = `${base}/view.html?d=${encoded}`;
+
+            document.getElementById('linkBox').textContent = link;
+            document.getElementById('linkBox').dataset.link = link;
+
+            const meta = festMeta[selectedFestival];
+            const waMsg = `${meta.emoji} ${meta.greeting}\nI've sent you a special greeting — open it here:\n${link}`;
+            document.getElementById('btnWA').href = `https://wa.me/?text=${encodeURIComponent(waMsg)}`;
+
+            const out = document.getElementById('outputSection');
+            out.classList.add('show');
+            setTimeout(() => out.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+        }
+
+        /* ── Copy ── */
+        function copyLink() {
+            const link = document.getElementById('linkBox').dataset.link || document.getElementById('linkBox').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                const btn = document.getElementById('btnCopy');
+                btn.textContent = '✅'; btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = '📋'; btn.classList.remove('copied'); }, 1600);
+            }).catch(() => {
+                // fallback
+                const ta = document.createElement('textarea');
+                ta.value = link; document.body.appendChild(ta); ta.select();
+                document.execCommand('copy'); document.body.removeChild(ta);
+            });
+        }
+    </script>
+</body>
+
+</html>
