@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;1,400&family=Baloo+2:wght@700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;1,400&family=Baloo+2:wght@700;800&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet" />
     <style>
         *,
@@ -25,11 +25,28 @@
             min-height: 100vh;
             overflow: hidden;
             transition: background 0.5s ease;
+            background-size: 400% 400%;
+        }
+
+        @keyframes festBgPop {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         /* ── Festival backgrounds ── */
         body.holi {
-            background: linear-gradient(135deg, #FF6B6B 0%, #FFD93D 35%, #6BCF63 65%, #4D9DE0 100%);
+            background: linear-gradient(135deg, #FF6B6B, #FFD93D, #6BCF63, #4D9DE0, #FF69B4);
+            background-size: 300% 300%;
+            animation: festBgPop 8s ease infinite;
         }
 
         body.diwali {
@@ -66,7 +83,9 @@
 
         /* ── Life Event backgrounds ── */
         body.birthday {
-            background: linear-gradient(135deg, #E91E63 0%, #FF6F91 50%, #FFC3A0 100%);
+            background: linear-gradient(135deg, #E91E63, #FF6F91, #FFC3A0, #F39C12);
+            background-size: 300% 300%;
+            animation: festBgPop 8s ease infinite;
         }
 
         body.wedding {
@@ -127,14 +146,23 @@
         .popup {
             background: #fff;
             border-radius: 22px;
-            padding: 40px 32px 32px;
+            padding: 48px 40px;
             width: 92%;
-            max-width: 480px;
+            max-width: 500px;
             position: relative;
-            transform: scale(0.78) translateY(20px);
+            transform: scale(0.85) translateY(30px);
             opacity: 0;
-            transition: transform .44s cubic-bezier(.34, 1.56, .64, 1), opacity .44s ease;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+            transition: transform .6s cubic-bezier(.34, 1.56, .64, 1), opacity .5s ease;
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .popup::before {
+            content: '';
+            position: absolute;
+            inset: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            pointer-events: none;
         }
 
         .overlay.show .popup {
@@ -401,24 +429,27 @@
         }
 
         .msg-text {
-            font-size: 1rem;
-            line-height: 1.75;
-            color: #444;
-            margin-bottom: 14px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #333;
             white-space: pre-wrap;
-            word-break: break-word;
+            margin-bottom: 32px;
+            text-align: center;
         }
 
         .popup.newyear .msg-text,
         .popup.custom .msg-text {
-            color: rgba(240, 240, 240, 0.88);
+            color: rgba(240, 240, 240, 0.95);
         }
 
         .sender-line {
-            font-style: italic;
-            font-size: .9rem;
-            color: #999;
-            text-align: right;
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            color: #555;
+            text-align: center;
+            margin-top: 36px;
+            font-weight: 400;
         }
 
         .popup.newyear .sender-line,
@@ -512,6 +543,86 @@
                 font-size: 1.65rem;
             }
         }
+
+        /* ── Envelope State ── */
+        .envelope-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 150;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #1A1A24 0%, #0D0D14 100%);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .envelope-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 32px;
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            color: #fff;
+            transform: scale(0.95);
+            opacity: 0;
+            animation: envPopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards 0.2s;
+        }
+
+        @keyframes envPopIn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .env-icon {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+        }
+
+        .env-title {
+            font-family: 'Baloo 2', cursive;
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .env-subtitle {
+            font-size: 0.95rem;
+            color: #A0AABF;
+            margin-bottom: 28px;
+        }
+
+        .btn-open-env {
+            background: linear-gradient(135deg, #E85D04 0%, #FF9040 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 16px 32px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(232, 93, 4, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .btn-open-env:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(232, 93, 4, 0.45);
+        }
+
+        .btn-open-env:active {
+            transform: scale(0.98);
+        }
     </style>
 </head>
 
@@ -519,10 +630,19 @@
 
     <canvas id="canvas"></canvas>
 
+    <!-- Envelope Overlay (Initial State) -->
+    <div class="envelope-overlay" id="envelopeOverlay">
+        <div class="envelope-card">
+            <div class="env-icon" id="envIcon">💌</div>
+            <h2 class="env-title">A Special Greeting</h2>
+            <p class="env-subtitle" id="envSubtitle">For Someone Special</p>
+            <button class="btn-open-env" onclick="openEnvelope()">Tap to Open ✨</button>
+        </div>
+    </div>
+
     <!-- Popup Overlay -->
     <div class="overlay" id="overlay">
         <div class="popup" id="popup">
-            <button class="btn-close" onclick="closePopup()">✕</button>
             <div class="fest-greeting" id="festGreet"></div>
             <div class="receiver-name" id="recvName"></div>
             <div class="popup-divider"></div>
@@ -545,22 +665,22 @@
            Festival Config
         ══════════════════════════════ */
         const FESTIVALS = {
-            holi: { greeting: '🎨 Happy Holi!', particle: 'confetti', colors: ['#FF6B6B', '#FFD93D', '#6BCF63', '#4D9DE0', '#FF69B4', '#FF8C00'] },
-            diwali: { greeting: '🪔 Happy Diwali!', particle: 'fireworks', colors: ['#FFD700', '#FF8C00', '#FFF', '#FFB347', '#FFEC8B'] },
-            eid: { greeting: '☪️ Eid Mubarak!', particle: 'stars', colors: ['#C0A060', '#FFD700', '#FFF', '#C9A84C'] },
-            ramzan: { greeting: '🌙 Ramzan Mubarak!', particle: 'stars', colors: ['#C9A84C', '#FFD700', '#FFF', '#4A90D9'] },
-            christmas: { greeting: '🎄 Merry Christmas!', particle: 'snow', colors: ['#FFF', 'rgba(220,240,255,0.9)', 'rgba(255,255,255,0.7)'] },
-            newyear: { greeting: '🎆 Happy New Year!', particle: 'fireworks', colors: ['#FFD700', '#FF6B6B', '#4D9DE0', '#6BCF63', '#FF69B4', '#FFF'] },
-            navratri: { greeting: '💃 Happy Navratri!', particle: 'confetti', colors: ['#9B59B6', '#E74C3C', '#F39C12', '#8E44AD'] },
-            onam: { greeting: '🌸 Happy Onam!', particle: 'petals', colors: ['#27AE60', '#F1C40F', '#E74C3C', '#FF8C00', '#FFF2CC'] },
-            lohri: { greeting: '🔥 Happy Lohri!', particle: 'fire', colors: ['#E74C3C', '#E67E22', '#F39C12', '#FF6B6B', '#FFD700'] },
-            birthday: { greeting: '🎂 Happy Birthday!', particle: 'confetti', colors: ['#E91E63', '#FF6F91', '#FFC3A0', '#FFD700', '#4D9DE0', '#6BCF63'] },
-            wedding: { greeting: '💍 Happy Wedding!', particle: 'stars', colors: ['#D4AF37', '#FFD700', '#FFF8DC', '#FFFACD', '#FFF'] },
-            anniversary: { greeting: '💑 Happy Anniversary!', particle: 'confetti', colors: ['#E74C3C', '#FF6B6B', '#FF1493', '#FFD700', '#FFF'] },
-            graduation: { greeting: '🎓 Congratulations, Graduate!', particle: 'confetti', colors: ['#3498DB', '#1B4F72', '#FFD700', '#FFF', '#5DADE2'] },
-            babyshower: { greeting: '👶 Welcome Little One!', particle: 'petals', colors: ['#FF9FF3', '#FDCBF1', '#A6C0FE', '#FFC3A0', '#FFF'] },
-            thankyou: { greeting: '🙏 Thank You So Much!', particle: 'stars', colors: ['#1ABC9C', '#48C9B0', '#76D7C4', '#FFD700', '#FFF'] },
-            custom: { greeting: '✨ Special Wishes!', particle: 'stars', colors: ['#F1C40F', '#BDC3C7', '#FFF', '#95A5A6'] }
+            holi: { greeting: '🎨 Happy Holi!', particle: 'emoji_down', emojis: ['💧', '🌈', '🎨', '✨'], colors: ['#FF6B6B', '#FFD93D', '#6BCF63', '#4D9DE0'] },
+            diwali: { greeting: '🪔 Happy Diwali!', particle: 'emoji_up', emojis: ['🪔', '✨', '🎇', '🧨'], colors: ['#FFD700', '#FF8C00', '#FFF'] },
+            eid: { greeting: '☪️ Eid Mubarak!', particle: 'emoji_up', emojis: ['🌙', '⭐', '✨', '🕌'], colors: ['#C0A060', '#FFD700', '#FFF'] },
+            ramzan: { greeting: '🌙 Ramzan Mubarak!', particle: 'emoji_up', emojis: ['🌙', '⭐', '✨'], colors: ['#C9A84C', '#FFD700', '#FFF'] },
+            christmas: { greeting: '🎄 Merry Christmas!', particle: 'snow', colors: ['#FFF', 'rgba(220,240,255,0.9)'] },
+            newyear: { greeting: '🎆 Happy New Year!', particle: 'fireworks', colors: ['#FFD700', '#FF6B6B', '#FFF'] },
+            navratri: { greeting: '💃 Happy Navratri!', particle: 'emoji_up', emojis: ['💃', '🎵', '✨', '🥁'], colors: [] },
+            onam: { greeting: '🌸 Happy Onam!', particle: 'petals', colors: ['#27AE60', '#F1C40F', '#E74C3C'] },
+            lohri: { greeting: '🔥 Happy Lohri!', particle: 'fire', colors: ['#E74C3C', '#E67E22', '#F39C12'] },
+            birthday: { greeting: '🎂 Happy Birthday!', particle: 'emoji_up', emojis: ['🎈', '🎁', '🎂', '🥳', '✨'], colors: [] },
+            wedding: { greeting: '💍 Happy Wedding!', particle: 'emoji_up', emojis: ['💍', '💖', '🕊️', '✨'], colors: [] },
+            anniversary: { greeting: '💑 Happy Anniversary!', particle: 'emoji_up', emojis: ['❤️', '🥂', '✨', '🌹'], colors: [] },
+            graduation: { greeting: '🎓 Congratulations!', particle: 'emoji_up', emojis: ['🎓', '📜', '🎉', '✨'], colors: [] },
+            babyshower: { greeting: '👶 Welcome Little One!', particle: 'emoji_up', emojis: ['🍼', '🧸', '👶', '✨'], colors: [] },
+            thankyou: { greeting: '🙏 Thank You So Much!', particle: 'emoji_up', emojis: ['💖', '🌸', '✨', '🙏'], colors: [] },
+            custom: { greeting: '✨ Special Wishes!', particle: 'emoji_up', emojis: ['✨', '🎉', '🌟', '💖'], colors: [] }
         };
 
         /* ══════════════════════════════
@@ -575,7 +695,7 @@
         ══════════════════════════════ */
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        let W, H, particles = [], fireworks = [], animId, pType, pColors;
+        let W, H, particles = [], fireworks = [], animId, pType, pColors, burstParticles = [];
 
         function resize() {
             W = canvas.width = window.innerWidth;
@@ -588,7 +708,9 @@
         class P {
             constructor() { this.init(); }
             init() {
-                this.color = pColors[Math.floor(Math.random() * pColors.length)];
+                if (pColors && pColors.length) this.color = pColors[Math.floor(Math.random() * pColors.length)];
+                else this.color = '#FFF';
+
                 if (pType === 'confetti' || pType === 'petals') {
                     this.x = Math.random() * W; this.y = -12;
                     this.sz = Math.random() * 7 + 4;
@@ -617,6 +739,22 @@
                     this.vx = (Math.random() - .5) * 1.5;
                     this.vy = -(Math.random() * 2.5 + 1.2);
                     this.life = 1; this.decay = Math.random() * .018 + .01;
+                } else if (pType === 'emoji_up' || pType === 'emoji_down') {
+                    const emojis = window.greetingData && window.greetingData.festival && FESTIVALS[window.greetingData.festival].emojis;
+                    this.char = emojis ? emojis[Math.floor(Math.random() * emojis.length)] : '✨';
+                    this.sz = Math.random() * 16 + 18; // Size between 18 and 34
+                    this.x = Math.random() * W;
+                    this.rot = Math.random() * 360;
+                    this.rs = (Math.random() - .5) * 2; // Slow rotation
+                    this.vx = (Math.random() - .5) * 1.2;
+                    this.op = Math.random() * 0.4 + 0.5;
+                    if (pType === 'emoji_up') {
+                        this.y = H + this.sz + Math.random() * 50;
+                        this.vy = -(Math.random() * 1.5 + 0.8);
+                    } else {
+                        this.y = -this.sz - Math.random() * 50;
+                        this.vy = Math.random() * 1.5 + 0.8;
+                    }
                 }
             }
             update() {
@@ -634,23 +772,37 @@
                     this.x += this.vx; this.y += this.vy;
                     this.life -= this.decay; this.sz *= .997;
                     if (this.life <= 0) this.init();
+                } else if (pType === 'emoji_up' || pType === 'emoji_down') {
+                    this.x += this.vx + Math.sin(Date.now() * 0.001 + this.x) * 0.3; // Slight wobble
+                    this.y += this.vy;
+                    this.rot += this.rs;
+                    if (pType === 'emoji_up' && this.y < -this.sz) this.init();
+                    if (pType === 'emoji_down' && this.y > H + this.sz) this.init();
                 }
             }
             draw() {
                 ctx.save();
                 ctx.globalAlpha = (this.op !== undefined) ? this.op : this.life;
-                ctx.fillStyle = this.color;
                 ctx.translate(this.x, this.y);
                 if (this.rot !== undefined) ctx.rotate(this.rot * Math.PI / 180);
-                if (this.shape === 'rect') {
-                    ctx.fillRect(-this.sz / 2, -this.sz / 4, this.sz, this.sz / 2);
-                } else if (this.shape === 'ellipse') {
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, this.sz, this.sz / 2, 0, 0, Math.PI * 2); ctx.fill();
-                } else if (pType === 'stars') {
-                    drawStar(ctx, 0, 0, 4, this.sz, this.sz / 2); ctx.fill();
+
+                if (this.char) {
+                    ctx.font = `${this.sz}px sans-serif`;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(this.char, 0, 0);
                 } else {
-                    ctx.beginPath(); ctx.arc(0, 0, this.sz / 2, 0, Math.PI * 2); ctx.fill();
+                    ctx.fillStyle = this.color;
+                    if (this.shape === 'rect') {
+                        ctx.fillRect(-this.sz / 2, -this.sz / 4, this.sz, this.sz / 2);
+                    } else if (this.shape === 'ellipse') {
+                        ctx.beginPath();
+                        ctx.ellipse(0, 0, this.sz, this.sz / 2, 0, 0, Math.PI * 2); ctx.fill();
+                    } else if (pType === 'stars') {
+                        drawStar(ctx, 0, 0, 4, this.sz, this.sz / 2); ctx.fill();
+                    } else {
+                        ctx.beginPath(); ctx.arc(0, 0, this.sz / 2, 0, Math.PI * 2); ctx.fill();
+                    }
                 }
                 ctx.restore();
             }
@@ -712,6 +864,84 @@
             animate();
         }
 
+        /* ══════════════════════════════
+           Burst Config (per-festival emoji explosion on open)
+        ══════════════════════════════ */
+        const BURST_CONFIG = {
+            holi: { chars: ['💧', '🌈', '🟥', '🟡', '🟦', '🟠'], count: 36 },
+            diwali: { chars: ['🪔', '🎇', '🎆', '✨', '🧨'], count: 32 },
+            eid: { chars: ['🌙', '⭐', '✨', '🕌', '💫'], count: 28 },
+            ramzan: { chars: ['🌙', '⭐', '✨', '💫'], count: 28 },
+            christmas: { chars: ['❄️', '⭐', '🎄', '✨', '⛄'], count: 30 },
+            newyear: { chars: ['🎆', '🎇', '✨', '🎊', '🎉'], count: 36 },
+            navratri: { chars: ['💃', '🌸', '✨', '🎵', '❤️'], count: 28 },
+            onam: { chars: ['🌸', '🌺', '🌼', '✨', '🌟'], count: 28 },
+            lohri: { chars: ['🔥', '✨', '💥', '⭐', '🟠'], count: 30 },
+            birthday: { chars: ['🎈', '🎉', '🎊', '🎂', '🥳', '✨'], count: 36 },
+            wedding: { chars: ['💍', '💖', '✨', '🌸', '🕊️'], count: 28 },
+            anniversary: { chars: ['❤️', '🌹', '✨', '🥂', '💑'], count: 28 },
+            graduation: { chars: ['🎓', '🎉', '✨', '📜', '💫'], count: 30 },
+            babyshower: { chars: ['👶', '🍼', '✨', '🧸', '💗'], count: 28 },
+            thankyou: { chars: ['💖', '🌸', '✨', '🙏', '🌟'], count: 28 },
+            custom: { chars: ['✨', '🌟', '🎉', '💖', '💫'], count: 28 },
+        };
+
+        function triggerBurst(festival) {
+            const cfg = BURST_CONFIG[festival] || BURST_CONFIG.custom;
+            const cx = W / 2;
+            const cy = H / 2;
+            burstParticles = [];
+
+            for (let i = 0; i < cfg.count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 9 + 4;  // lighter speed
+                burstParticles.push({
+                    char: cfg.chars[Math.floor(Math.random() * cfg.chars.length)],
+                    x: cx, y: cy,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    sz: Math.random() * 10 + 14,        // smaller: 14-24px
+                    a: 1,
+                    decay: Math.random() * 0.04 + 0.03, // faster fade-out
+                    rot: Math.random() * 360,
+                    rs: (Math.random() - 0.5) * 8,
+                });
+            }
+
+            // Bring canvas above envelope overlay to show burst
+            canvas.style.zIndex = '200';
+            canvas.style.pointerEvents = 'none';
+            requestAnimationFrame(animateBurst);
+        }
+
+        function animateBurst() {
+            ctx.clearRect(0, 0, W, H);
+            burstParticles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.32;   // gravity
+                p.vx *= 0.975;  // air resistance
+                p.a -= p.decay;
+                p.rot += p.rs;
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, p.a);
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rot * Math.PI / 180);
+                ctx.font = `${p.sz}px sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(p.char, 0, 0);
+                ctx.restore();
+            });
+            burstParticles = burstParticles.filter(p => p.a > 0);
+            if (burstParticles.length > 0) {
+                requestAnimationFrame(animateBurst);
+            } else {
+                ctx.clearRect(0, 0, W, H);
+                canvas.style.zIndex = '0'; // return canvas to back
+            }
+        }
+
         function animate() {
             ctx.clearRect(0, 0, W, H);
             if (pType === 'fireworks') {
@@ -754,8 +984,35 @@
 
                 const fest = FESTIVALS[data.festival];
 
-                // Apply theme class
-                document.body.classList.add(data.festival);
+                // Apply AI-suggested theme colors if present
+                if (data.aiTheme && data.aiTheme.bg && data.aiTheme.accent) {
+                    const aiStyle = document.createElement('style');
+                    aiStyle.id = 'ai-theme-override';
+                    aiStyle.textContent = `
+                        body.${data.festival} {
+                            background: linear-gradient(135deg, ${data.aiTheme.bg} 0%, ${data.aiTheme.secondary || data.aiTheme.bg} 100%) !important;
+                        }
+                        .popup.${data.festival} {
+                            border-top-color: ${data.aiTheme.accent} !important;
+                        }
+                        .${data.festival} .fest-greeting {
+                            color: ${data.aiTheme.accent} !important;
+                        }
+                    `;
+                    document.head.appendChild(aiStyle);
+
+                    // Also update particle colors to match
+                    if (fest) fest.colors = [data.aiTheme.accent, data.aiTheme.secondary || '#FFF', data.aiTheme.bg, '#FFFFFF'];
+                }
+
+                // Save data globally but don't apply theme/particles yet.
+                window.greetingData = data;
+
+                // Update Envelope details
+                document.getElementById('envSubtitle').textContent = `For ${data.receiver}`;
+                if (data.festival === 'birthday') document.getElementById('envIcon').textContent = '🎂';
+                else if (data.festival === 'wedding' || data.festival === 'anniversary') document.getElementById('envIcon').textContent = '💍';
+                else document.getElementById('envIcon').textContent = fest.emoji || '💌';
 
                 // Set page title
                 let greetStr = fest.greeting;
@@ -764,24 +1021,49 @@
                 }
                 document.title = `${greetStr} — FestiveLink`;
 
-                // Fill popup
+                // Fill card content
                 document.getElementById('festGreet').textContent = greetStr;
                 document.getElementById('recvName').textContent = `Dear ${data.receiver},`;
                 document.getElementById('msgText').textContent = data.message;
                 document.getElementById('senderLine').textContent = `With love, ${data.sender} ❤️`;
 
-                // Apply theme class to popup
-                document.getElementById('popup').classList.add(data.festival);
-
-                // Start particles
-                initParticles(data.festival);
-
-                // Show popup after short delay
-                setTimeout(showPopup, 320);
-
             } catch (e) {
+                document.getElementById('envelopeOverlay').style.display = 'none';
                 document.getElementById('errorPage').classList.add('show');
             }
+        }
+
+        function openEnvelope() {
+            const env = document.getElementById('envelopeOverlay');
+            const festival = window.greetingData.festival;
+            const btn = env.querySelector('.btn-open-env');
+            if (btn) btn.disabled = true; // prevent double-click
+
+            // Step 1: Trigger the burst immediately
+            triggerBurst(festival);
+
+            // Step 2: After 300ms — start fading the envelope scale-up
+            setTimeout(() => {
+                env.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                env.style.opacity = '0';
+                env.style.transform = 'scale(1.08)';
+            }, 300);
+
+            // Step 3: After burst peaks (~950ms) — remove envelope, apply theme, show card
+            setTimeout(() => {
+                env.style.display = 'none';
+                canvas.style.zIndex = '0'; // back to behind overlay
+
+                // Apply theme class to body + popup
+                document.body.classList.add(festival);
+                document.getElementById('popup').classList.add(festival);
+
+                // Start background particles
+                initParticles(festival);
+
+                // Reveal Inner Card
+                setTimeout(showPopup, 120);
+            }, 950);
         }
 
         init();

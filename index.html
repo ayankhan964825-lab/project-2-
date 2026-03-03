@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FestiveLink — Create Your Personalised Greeting</title>
     <meta name="description"
-        content="Create personalized greeting links for festivals, birthdays, weddings & more — share instantly on WhatsApp. Free. No signup." />
+        content="Create personalized greeting links for festivals, birthdays, weddings & more — share instantly on WhatsApp. AI-powered. Free. No signup." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -31,6 +31,8 @@
             --muted: #8892A4;
             --success: #27AE60;
             --error: #E74C3C;
+            --ai: #7C3AED;
+            --ai-light: rgba(124, 58, 237, 0.15);
         }
 
         html {
@@ -51,7 +53,8 @@
             inset: 0;
             background:
                 radial-gradient(ellipse at 15% 20%, rgba(30, 58, 95, 0.35) 0%, transparent 55%),
-                radial-gradient(ellipse at 85% 80%, rgba(232, 93, 4, 0.18) 0%, transparent 55%);
+                radial-gradient(ellipse at 85% 80%, rgba(232, 93, 4, 0.18) 0%, transparent 55%),
+                radial-gradient(ellipse at 50% 50%, rgba(124, 58, 237, 0.08) 0%, transparent 60%);
             pointer-events: none;
             z-index: 0;
         }
@@ -59,7 +62,7 @@
         .container {
             position: relative;
             z-index: 1;
-            max-width: 580px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 0 20px 60px;
         }
@@ -67,7 +70,7 @@
         /* ── Header ── */
         .header {
             text-align: center;
-            padding: 52px 0 36px;
+            padding: 42px 0 28px;
         }
 
         .logo {
@@ -84,6 +87,138 @@
             color: var(--muted);
             font-size: 0.9375rem;
             margin-top: 6px;
+        }
+
+        /* ── API Key Banner ── */
+        .api-banner {
+            background: rgba(124, 58, 237, 0.08);
+            border: 1.5px solid rgba(124, 58, 237, 0.25);
+            border-radius: 14px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .api-banner.connected {
+            background: rgba(39, 174, 96, 0.07);
+            border-color: rgba(39, 174, 96, 0.28);
+        }
+
+        .api-banner-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .api-banner-icon {
+            font-size: 1.3rem;
+        }
+
+        .api-banner-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text);
+            flex: 1;
+        }
+
+        .api-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #555;
+            transition: background 0.3s;
+        }
+
+        .api-status-dot.on {
+            background: var(--success);
+            box-shadow: 0 0 6px rgba(39, 174, 96, 0.6);
+        }
+
+        .api-status-text {
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+
+        .api-status-text.on {
+            color: var(--success);
+        }
+
+        .api-key-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .api-key-input {
+            flex: 1;
+            background: var(--input-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 9px;
+            padding: 10px 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.825rem;
+            color: var(--text);
+            outline: none;
+            transition: border-color .2s;
+            letter-spacing: 0.03em;
+        }
+
+        .api-key-input:focus {
+            border-color: var(--ai);
+        }
+
+        .api-key-input::placeholder {
+            color: rgba(136, 146, 164, 0.45);
+        }
+
+        .btn-connect {
+            background: linear-gradient(135deg, #7C3AED, #A855F7);
+            border: none;
+            border-radius: 9px;
+            padding: 10px 18px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: opacity .2s, transform .18s;
+        }
+
+        .btn-connect:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+        }
+
+        .btn-disconnect {
+            background: transparent;
+            border: 1.5px solid rgba(231, 76, 60, 0.4);
+            border-radius: 9px;
+            padding: 10px 14px;
+            color: var(--error);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        .btn-disconnect:hover {
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .api-hint {
+            font-size: 0.68rem;
+            color: var(--muted);
+            margin-top: 8px;
+        }
+
+        .api-hint a {
+            color: rgba(124, 58, 237, 0.85);
+            text-decoration: none;
+        }
+
+        .api-hint a:hover {
+            text-decoration: underline;
         }
 
         /* ── Card ── */
@@ -110,6 +245,8 @@
             background: var(--border);
             margin: 24px 0;
         }
+
+
 
         /* ── Search Occasion UI ── */
         .search-wrapper {
@@ -206,8 +343,23 @@
             font-weight: 600;
         }
 
+        .soon-badge {
+            font-size: 0.7rem;
+            color: #E85D04;
+            background: rgba(232, 93, 4, 0.15);
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-weight: 700;
+            vertical-align: middle;
+        }
 
-        /* Selected Occasion Display (Hidden until selected) */
+        .soon-badge.upcoming-badge {
+            color: var(--muted);
+            background: rgba(136, 146, 164, 0.12);
+            font-weight: 500;
+        }
+
+        /* Selected Occasion Display */
         #selectedOccasionDisplay {
             display: none;
             background: rgba(232, 93, 4, 0.08);
@@ -237,6 +389,8 @@
         .btn-change:hover {
             color: var(--text);
         }
+
+
 
         /* ── Inputs ── */
         .form-row {
@@ -313,6 +467,119 @@
             color: var(--error);
             margin-top: 4px;
             display: none;
+        }
+
+        /* ── AI Message Actions bar ── */
+        .ai-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .btn-ai-generate {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #7C3AED, #A855F7);
+            border: none;
+            border-radius: 9px;
+            padding: 9px 16px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity .2s, transform .18s, box-shadow .18s;
+        }
+
+        .btn-ai-generate:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.38);
+        }
+
+        .btn-ai-generate:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .tone-label {
+            font-size: 0.72rem;
+            color: var(--muted);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .tone-chips {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-tone {
+            background: var(--input-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 12px;
+            color: var(--muted);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-tone:hover {
+            border-color: rgba(124, 58, 237, 0.5);
+            color: #A78BFA;
+            background: var(--ai-light);
+        }
+
+        .btn-tone:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-tone.active {
+            border-color: var(--ai);
+            color: #A78BFA;
+            background: var(--ai-light);
+        }
+
+        /* AI spinner */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+        }
+
+        /* AI status inline message */
+        .ai-status {
+            font-size: 0.72rem;
+            color: #A78BFA;
+            margin-top: 6px;
+            min-height: 18px;
+            display: block;
+            /* changed from flex to block to allow text wrapping */
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            line-height: 1.4;
         }
 
         /* ── Buttons ── */
@@ -408,7 +675,6 @@
             align-items: center;
             justify-content: center;
             transition: background .18s;
-            position: relative;
         }
 
         .btn-copy:hover {
@@ -452,6 +718,19 @@
             color: var(--muted);
         }
 
+        .footer .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--ai-light);
+            border: 1px solid rgba(124, 58, 237, 0.25);
+            border-radius: 12px;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            color: #A78BFA;
+            margin-top: 6px;
+        }
+
         /* ── Responsive ── */
         @media (max-width: 480px) {
             .card {
@@ -460,6 +739,14 @@
 
             .form-row {
                 grid-template-columns: 1fr;
+            }
+
+            .ai-actions {
+                flex-direction: column;
+            }
+
+            .tone-chips {
+                flex-wrap: wrap;
             }
         }
     </style>
@@ -470,8 +757,35 @@
 
         <header class="header">
             <div class="logo">✨ FestiveLink</div>
-            <p class="tagline">Create a personalised greeting &amp; share it instantly</p>
+            <p class="tagline">Create a personalised greeting &amp; share it instantly — now with AI ✦</p>
         </header>
+
+        <!-- ── API Key Banner ── -->
+        <div class="api-banner" id="apiBanner">
+            <div class="api-banner-header">
+                <span class="api-banner-icon">🔑</span>
+                <span class="api-banner-title">Gemini AI — Power up your greetings</span>
+                <span class="api-status-dot" id="apiDot"></span>
+                <span class="api-status-text" id="apiStatusText">Not connected</span>
+            </div>
+
+            <div class="api-key-row" id="apiKeyRow">
+                <input type="password" id="apiKeyInput" class="api-key-input"
+                    placeholder="Paste your Gemini API key (AIza...)" autocomplete="off" />
+                <button class="btn-connect" id="btnConnect" onclick="connectApi()">Connect</button>
+            </div>
+
+            <div class="api-key-row" id="apiConnectedRow" style="display:none;">
+                <span style="font-size:0.82rem;color:var(--success);flex:1;">✅ AI features are active for this
+                    session</span>
+                <button class="btn-disconnect" onclick="disconnectApi()">Disconnect</button>
+            </div>
+
+            <p class="api-hint">
+                Your key stays in your browser only — never sent to any server. &nbsp;
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">Get a free key →</a>
+            </p>
+        </div>
 
         <div class="card">
 
@@ -518,9 +832,27 @@
             <div class="section-label">Step 3 — Your Message</div>
             <div class="form-group" style="margin-bottom:0">
                 <label for="message">Personal Message</label>
-                <textarea id="message" placeholder="Write your heartfelt message here..." maxlength="500"></textarea>
+                <textarea id="message" placeholder="Write your heartfelt message here, or use AI to generate one ✨"
+                    maxlength="500"></textarea>
                 <div class="char-row"><span class="char-count" id="charCount">0 / 500</span></div>
                 <div class="field-err" id="errMsg">Please write a message</div>
+
+                <!-- AI Actions -->
+                <div class="ai-actions" id="aiActions">
+                    <button class="btn-ai-generate" id="btnAiGenerate" onclick="generateAiMessage()">
+                        ✨ Generate with AI
+                    </button>
+                    <span class="tone-label">Tone:</span>
+                    <div class="tone-chips">
+                        <button class="btn-tone" id="toneHumorous" onclick="changeTone('humorous')"
+                            title="Rewrite in a funny tone">😄 Funny</button>
+                        <button class="btn-tone" id="toneHeartfelt" onclick="changeTone('heartfelt')"
+                            title="Rewrite in a heartfelt tone">💖 Heartfelt</button>
+                        <button class="btn-tone" id="toneFormal" onclick="changeTone('formal')"
+                            title="Rewrite in a formal tone">🎩 Formal</button>
+                    </div>
+                </div>
+                <div class="ai-status" id="aiMsgStatus"></div>
             </div>
 
             <div class="divider"></div>
@@ -548,12 +880,20 @@
             </div>
         </div>
 
-        <footer class="footer">Made with ❤️ — FestiveLink v1.0</footer>
+        <footer class="footer">
+            Made with ❤️ — FestiveLink v2.0
+            <br>
+            <span class="ai-badge">✦ Powered by Gemini AI</span>
+        </footer>
     </div>
 
     <script>
-        /* ── State ── */
+        /* ══════════════════════════════════════
+           STATE
+        ══════════════════════════════════════ */
         let selectedFestival = null;
+        let customOccasionName = '';
+
         const festMeta = {
             birthday: { emoji: '🎂', label: 'Birthday', greeting: 'Happy Birthday!' },
             wedding: { emoji: '💍', label: 'Wedding', greeting: 'Happy Wedding!' },
@@ -573,9 +913,225 @@
             custom: { emoji: '✨', label: 'Custom', greeting: 'Special Wishes!' }
         };
 
-        /* ── Search & Select Logic ── */
-        let customOccasionName = '';
+        /* ── Festival dates (used to sort by upcoming) ── */
+        const FESTIVAL_DATES = {
+            holi: new Date('2026-03-22'),
+            navratri: new Date('2026-03-22'),
+            eid: new Date('2026-03-30'),
+            ramzan: new Date('2026-02-28'), // already underway; next in 2027
+            onam: new Date('2026-09-01'),
+            diwali: new Date('2026-10-20'),
+            christmas: new Date('2026-12-25'),
+            newyear: new Date('2027-01-01'),
+            lohri: new Date('2027-01-13'), // passed for 2026
+            // Personal events — no fixed calendar date, appear after festivals
+            birthday: null, wedding: null, anniversary: null,
+            graduation: null, babyshower: null, thankyou: null, custom: null,
+        };
 
+        function getDaysUntil(key) {
+            const d = FESTIVAL_DATES[key];
+            if (!d) return 99999; // personal events always last
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return Math.ceil((d.getTime() - today.getTime()) / 86400000);
+        }
+
+        /* ══════════════════════════════════════
+           GEMINI API KEY MANAGEMENT
+        ══════════════════════════════════════ */
+        const API_KEY_STORE = 'festivelink_gemini_key';
+
+        function connectApi() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            if (!key || !key.startsWith('AIza')) {
+                shakeElement('apiKeyInput');
+                setAiStatus('aiMsgStatus', '⚠️ Key must start with "AIza..."', false);
+                return;
+            }
+            sessionStorage.setItem(API_KEY_STORE, key);
+            updateApiUI(true);
+        }
+
+        function disconnectApi() {
+            sessionStorage.removeItem(API_KEY_STORE);
+            document.getElementById('apiKeyInput').value = '';
+            updateApiUI(false);
+            clearAiStatus('aiMsgStatus');
+        }
+
+        function updateApiUI(connected) {
+            const dot = document.getElementById('apiDot');
+            const statusText = document.getElementById('apiStatusText');
+            const banner = document.getElementById('apiBanner');
+            const keyRow = document.getElementById('apiKeyRow');
+            const connRow = document.getElementById('apiConnectedRow');
+
+            if (connected) {
+                dot.classList.add('on');
+                statusText.textContent = 'Connected';
+                statusText.classList.add('on');
+                banner.classList.add('connected');
+                keyRow.style.display = 'none';
+                connRow.style.display = 'flex';
+            } else {
+                dot.classList.remove('on');
+                statusText.textContent = 'Not connected';
+                statusText.classList.remove('on');
+                banner.classList.remove('connected');
+                keyRow.style.display = 'flex';
+                connRow.style.display = 'none';
+            }
+        }
+
+        function hasApiKey() {
+            return !!sessionStorage.getItem(API_KEY_STORE);
+        }
+
+        /* ══════════════════════════════════════
+           GEMINI API CALL
+        ══════════════════════════════════════ */
+        async function callGemini(prompt) {
+            const key = sessionStorage.getItem(API_KEY_STORE);
+            if (!key) throw new Error('No API key. Please connect your Gemini key at the top.');
+
+            const res = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { temperature: 0.85, maxOutputTokens: 400 }
+                    })
+                }
+            );
+
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                let errMsg = err?.error?.message || `API error ${res.status}`;
+
+                if (res.status === 429 || errMsg.toLowerCase().includes('quota') || errMsg.toLowerCase().includes('rate limit')) {
+                    errMsg = "API Quota Exceeded. If this is a new key, it may take a few minutes to become active. Otherwise, your free tier limits have been reached.";
+                } else if (res.status === 400 && errMsg.toLowerCase().includes('key')) {
+                    errMsg = "Invalid API key. Please check your key and try again.";
+                }
+
+                throw new Error(errMsg);
+            }
+
+            const json = await res.json();
+
+            if (!json.candidates || json.candidates.length === 0) {
+                console.error("Gemini API raw response:", json);
+                throw new Error("API returned empty response. Could be blocked by safety settings.");
+            }
+            if (!json.candidates[0].content || !json.candidates[0].content.parts) {
+                console.error("Gemini API raw response:", json);
+                throw new Error("API returned unexpected structure. Model might be unavailable.");
+            }
+
+            return json.candidates[0].content.parts[0].text.trim();
+        }
+
+        /* ══════════════════════════════════════
+           AI — MESSAGE GENERATOR
+        ══════════════════════════════════════ */
+        async function generateAiMessage() {
+            if (!hasApiKey()) {
+                setAiStatus('aiMsgStatus', '🔑 Please connect your Gemini API key first.', false);
+                document.getElementById('apiKeyInput').focus();
+                return;
+            }
+            if (!selectedFestival) {
+                setAiStatus('aiMsgStatus', '⚠️ Please select an occasion first.', false);
+                return;
+            }
+
+            const sender = document.getElementById('senderName').value.trim();
+            const receiver = document.getElementById('receiverName').value.trim();
+            const occasion = selectedFestival === 'custom' ? customOccasionName : festMeta[selectedFestival].label;
+
+            if (!sender || !receiver) {
+                setAiStatus('aiMsgStatus', '⚠️ Fill in both names before generating.', false);
+                return;
+            }
+
+            setAiBusy('aiMsgStatus', 'Gemini is writing your message…');
+            disableAiButtons(true);
+
+            try {
+                const prompt = `Write a warm and personal greeting message for ${receiver} from ${sender} for ${occasion}. 
+Make it genuine, emotional, and specific to the occasion. 
+Keep it under 120 words. Write only the message body — no subject line, no "Dear X", just the core message text.`;
+
+                const text = await callGemini(prompt);
+                document.getElementById('message').value = text;
+                updateCharCount(text.length);
+                clearAiStatus('aiMsgStatus');
+                setAiStatus('aiMsgStatus', '✅ Message generated! Feel free to edit it.', true);
+                clearToneActive();
+            } catch (e) {
+                setAiStatus('aiMsgStatus', '❌ ' + e.message, false);
+            } finally {
+                disableAiButtons(false);
+            }
+        }
+
+        /* ══════════════════════════════════════
+           AI — TONE CHANGER
+        ══════════════════════════════════════ */
+        async function changeTone(tone) {
+            if (!hasApiKey()) {
+                setAiStatus('aiMsgStatus', '🔑 Please connect your Gemini API key first.', false);
+                return;
+            }
+            const currentMsg = document.getElementById('message').value.trim();
+            if (!currentMsg) {
+                setAiStatus('aiMsgStatus', '⚠️ Write or generate a message first, then change its tone.', false);
+                return;
+            }
+
+            const occasion = selectedFestival ? (selectedFestival === 'custom' ? customOccasionName : festMeta[selectedFestival].label) : 'this occasion';
+            const toneDescriptions = {
+                humorous: 'funny, witty, and playful — with a lighthearted joke or pun',
+                heartfelt: 'deeply emotional, warm, and sincere',
+                formal: 'professional, respectful, and dignified'
+            };
+
+            setAiBusy('aiMsgStatus', `Rewriting in ${tone} tone…`);
+            disableAiButtons(true);
+            clearToneActive();
+            document.getElementById(`tone${capitalize(tone === 'humorous' ? 'Humorous' : tone === 'heartfelt' ? 'Heartfelt' : 'Formal')}`).classList.add('active');
+
+            try {
+                const prompt = `Rewrite the following greeting message for ${occasion} in a ${toneDescriptions[tone]} tone. 
+Keep the same sentiment and people (sender/receiver feel), but change the style completely.
+Keep it under 120 words. Write only the rewritten message — no explanations.
+
+Original message:
+"${currentMsg}"`;
+
+                const text = await callGemini(prompt);
+                document.getElementById('message').value = text;
+                updateCharCount(text.length);
+                clearAiStatus('aiMsgStatus');
+                setAiStatus('aiMsgStatus', `✅ Message rewritten in ${tone} tone!`, true);
+            } catch (e) {
+                setAiStatus('aiMsgStatus', '❌ ' + e.message, false);
+                clearToneActive();
+            } finally {
+                disableAiButtons(false);
+            }
+        }
+
+        /* ══════════════════════════════════════
+           AI — THEME SUGGESTER
+        ══════════════════════════════════════ */
+
+        /* ══════════════════════════════════════
+           SEARCH & SELECT OCCASION
+        ══════════════════════════════════════ */
         function renderResults() {
             const query = val('searchInput').toLowerCase();
             const list = document.getElementById('resultsList');
@@ -583,51 +1139,46 @@
 
             let hasExactMatch = false;
 
-            // Render existing occasions
-            for (const [key, meta] of Object.entries(festMeta)) {
-                if (key === 'custom') continue; // Handle custom separately
+            // Sort entries: soonest upcoming festival first; already-past or null-date go last
+            const sorted = Object.entries(festMeta)
+                .filter(([k]) => k !== 'custom')
+                .sort(([a], [b]) => {
+                    const da = getDaysUntil(a);
+                    const db = getDaysUntil(b);
+                    // Negative = festival already passed this year → push after upcoming ones
+                    const normA = da < 0 ? 50000 + Math.abs(da) : da;
+                    const normB = db < 0 ? 50000 + Math.abs(db) : db;
+                    return normA - normB;
+                });
 
-                if (meta.label.toLowerCase().includes(query)) {
-                    if (meta.label.toLowerCase() === query) hasExactMatch = true;
+            for (const [key, meta] of sorted) {
+                if (!meta.label.toLowerCase().includes(query)) continue;
+                if (meta.label.toLowerCase() === query) hasExactMatch = true;
 
-                    const div = document.createElement('div');
-                    div.className = 'result-item';
-                    div.innerHTML = `<span class="emoji">${meta.emoji}</span><span class="name">${meta.label}</span>`;
-                    div.onclick = () => selectFest(key, meta.label, meta.emoji);
-                    list.appendChild(div);
-                }
+                const days = getDaysUntil(key);
+                let badge = '';
+                if (days >= 0 && days <= 7) badge = ` <span class="soon-badge">🔥 ${days === 0 ? 'Today!' : `${days}d`}</span>`;
+
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.innerHTML = `<span class="emoji">${meta.emoji}</span><span class="name">${meta.label}${badge}</span>`;
+                div.onclick = () => selectFest(key, meta.label, meta.emoji);
+                list.appendChild(div);
             }
 
-            // Always offer a Custom Option if there's a custom query
             if (query.trim().length > 0 && !hasExactMatch) {
                 const customLabel = query.trim().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
                 const div = document.createElement('div');
                 div.className = 'result-item';
                 div.innerHTML = `<span class="emoji">✨</span><span class="name">${customLabel}</span><span class="custom-create-hint">Create</span>`;
-                div.onclick = () => {
-                    customOccasionName = customLabel;
-                    selectFest('custom', customLabel, '✨');
-                };
-                list.insertBefore(div, list.firstChild); // Put custom at top if typing
-            }
-
-            // Always offer a Custom Option if there's a custom query
-            if (query.trim().length > 0 && !hasExactMatch) {
-                const customLabel = query.trim().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-                const div = document.createElement('div');
-                div.className = 'result-item';
-                div.innerHTML = `<span class="emoji">✨</span><span class="name">${customLabel}</span><span class="custom-create-hint">Create</span>`;
-                div.onclick = () => {
-                    customOccasionName = customLabel;
-                    selectFest('custom', customLabel, '✨');
-                };
-                list.insertBefore(div, list.firstChild); // Put custom at top if typing
+                div.onclick = () => { customOccasionName = customLabel; selectFest('custom', customLabel, '✨'); };
+                list.insertBefore(div, list.firstChild);
             }
         }
 
         function selectFest(key, label, emoji) {
             selectedFestival = key;
-            if (key !== 'custom') customOccasionName = ''; // Reset if standard chosen
+            if (key !== 'custom') customOccasionName = '';
 
             hide('errFest');
             hide('searchContainer');
@@ -635,83 +1186,88 @@
             document.getElementById('selEmoji').textContent = emoji;
             document.getElementById('selName').textContent = label;
             document.getElementById('selectedOccasionDisplay').style.display = 'flex';
+
+            // Show AI theme row
+            document.getElementById('aiThemeRow').classList.add('visible');
+            // Reset theme on occasion change
+            clearTheme();
+            clearAiStatus('aiThemeStatus');
         }
 
         function changeOccasion() {
             selectedFestival = null;
             customOccasionName = '';
+            aiThemeData = null;
             document.getElementById('selectedOccasionDisplay').style.display = 'none';
             document.getElementById('searchInput').value = '';
+            document.getElementById('aiThemeRow').classList.remove('visible');
+            document.getElementById('themePreview').style.display = 'none';
             show('searchContainer');
             renderResults();
             document.getElementById('searchInput').focus();
         }
 
-        // Initial render on load
-        window.onload = () => { renderResults(); };
-
-        /* ── Char counter ── */
-        const msgEl = document.getElementById('message');
-        const charEl = document.getElementById('charCount');
-        msgEl.addEventListener('input', () => {
-            const n = msgEl.value.length;
-            charEl.textContent = `${n} / 500`;
-            charEl.className = 'char-count' + (n > 490 ? ' over' : n > 450 ? ' warn' : '');
-        });
-
-        /* ── Helpers ── */
-        function show(id) { document.getElementById(id).style.display = 'block'; }    // Always offer a Custom Option if there's a custom query
-        if (query.trim().length > 0 && !hasExactMatch) {
-            const customLabel = query.trim().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-            const div = document.createElement('div');
-            div.className = 'result-item';
-            div.innerHTML = `<span class="emoji">✨</span><span class="name">${customLabel}</span><span class="custom-create-hint">Create</span>`;
-            div.onclick = () => {
-                customOccasionName = customLabel;
-                selectFest('custom', customLabel, '✨');
-            };
-            list.insertBefore(div, list.firstChild); // Put custom at top if typing
-        }
-        }
-
-        function selectFest(key, label, emoji) {
-            selectedFestival = key;
-            if (key !== 'custom') customOccasionName = ''; // Reset if standard chosen
-
-            hide('errFest');
-            hide('searchContainer');
-
-            document.getElementById('selEmoji').textContent = emoji;
-            document.getElementById('selName').textContent = label;
-            document.getElementById('selectedOccasionDisplay').style.display = 'flex';
-        }
-
-        function changeOccasion() {
-            selectedFestival = null;
-            customOccasionName = '';
-            document.getElementById('selectedOccasionDisplay').style.display = 'none';
-            document.getElementById('searchInput').value = '';
-            show('searchContainer');
+        /* ── Initialization ── */
+        window.onload = () => {
             renderResults();
-            document.getElementById('searchInput').focus();
-        }
-
-        // Initial render on load
-        window.onload = () => { renderResults(); };
+            // Restore API key from session
+            if (hasApiKey()) updateApiUI(true);
+        };
 
         /* ── Char counter ── */
         const msgEl = document.getElementById('message');
-        const charEl = document.getElementById('charCount');
-        msgEl.addEventListener('input', () => {
-            const n = msgEl.value.length;
-            charEl.textContent = `${n} / 500`;
-            charEl.className = 'char-count' + (n > 490 ? ' over' : n > 450 ? ' warn' : '');
-        });
+        msgEl.addEventListener('input', () => updateCharCount(msgEl.value.length));
 
-        /* ── Helpers ── */
+        function updateCharCount(n) {
+            const el = document.getElementById('charCount');
+            el.textContent = `${n} / 500`;
+            el.className = 'char-count' + (n > 490 ? ' over' : n > 450 ? ' warn' : '');
+        }
+
+        /* ══════════════════════════════════════
+           HELPERS
+        ══════════════════════════════════════ */
         function show(id) { document.getElementById(id).style.display = 'block'; }
         function hide(id) { document.getElementById(id).style.display = 'none'; }
         function val(id) { return document.getElementById(id).value.trim(); }
+        function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
+
+        function setAiStatus(id, msg, success) {
+            const el = document.getElementById(id);
+            el.innerHTML = msg;
+            el.style.color = success ? 'var(--success)' : (msg.startsWith('❌') ? 'var(--error)' : '#A78BFA');
+        }
+
+        function clearAiStatus(id) {
+            document.getElementById(id).innerHTML = '';
+        }
+
+        function setAiBusy(id, msg) {
+            const el = document.getElementById(id);
+            el.innerHTML = `<span class="spinner"></span> ${msg}`;
+            el.style.color = '#A78BFA';
+        }
+
+        function disableAiButtons(state) {
+            ['btnAiGenerate', 'toneHumorous', 'toneHeartfelt', 'toneFormal'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.disabled = state;
+            });
+        }
+
+        function clearToneActive() {
+            ['toneHumorous', 'toneHeartfelt', 'toneFormal'].forEach(id => {
+                document.getElementById(id)?.classList.remove('active');
+            });
+        }
+
+        function shakeElement(id) {
+            const el = document.getElementById(id);
+            el.style.animation = 'none';
+            el.offsetHeight;
+            el.style.animation = 'shake 0.35s ease';
+            setTimeout(() => el.style.animation = '', 400);
+        }
 
         /* ── Encode ── */
         function encodeGreeting(data) { return btoa(encodeURIComponent(JSON.stringify(data))); }
@@ -726,7 +1282,7 @@
             return ok;
         }
 
-        /* ── Generate ── */
+        /* ── Generate Link ── */
         function generateLink() {
             if (!validate()) return;
             const data = {
@@ -734,12 +1290,10 @@
                 receiver: val('receiverName'),
                 message: val('message'),
                 festival: selectedFestival,
-                version: '1.0'
+                version: '2.0'
             };
+            if (selectedFestival === 'custom') data.customName = customOccasionName;
 
-            if (selectedFestival === 'custom') {
-                data.customName = customOccasionName;
-            }
             const encoded = encodeGreeting(data);
             const base = window.location.href.replace(/index\.html.*$/, '').replace(/\/$/, '');
             const link = `${base}/view.html?d=${encoded}`;
@@ -748,9 +1302,7 @@
             document.getElementById('linkBox').dataset.link = link;
 
             let greetStr = festMeta[selectedFestival].greeting;
-            if (selectedFestival === 'custom') {
-                greetStr = `Happy ${data.customName}!`;
-            }
+            if (selectedFestival === 'custom') greetStr = `Happy ${data.customName}!`;
 
             const meta = festMeta[selectedFestival];
             const waMsg = `${meta.emoji} ${greetStr}\nI've sent you a special greeting — open it here:\n${link}`;
@@ -769,7 +1321,6 @@
                 btn.textContent = '✅'; btn.classList.add('copied');
                 setTimeout(() => { btn.textContent = '📋'; btn.classList.remove('copied'); }, 1600);
             }).catch(() => {
-                // fallback
                 const ta = document.createElement('textarea');
                 ta.value = link; document.body.appendChild(ta); ta.select();
                 document.execCommand('copy'); document.body.removeChild(ta);
